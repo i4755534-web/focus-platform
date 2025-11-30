@@ -1,10 +1,11 @@
 'use client';
 
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import EmojiPicker from 'emoji-picker-react';
 import DOMPurify from 'dompurify';
+import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 
 interface MessageInputProps {
   onSendMessage: (text: string) => void;
@@ -16,9 +17,7 @@ interface MessageInputProps {
 export default function MessageInput({ onSendMessage, onTyping, replyTo, onCancelReply }: MessageInputProps) {
   const [text, setText] = useState('');
   const [showPicker, setShowPicker] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-  const audioChunksRef = useRef<Blob[]>([]);
+  const { isListening, transcript, isSupported, startListening, stopListening } = useSpeechRecognition();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -62,38 +61,12 @@ export default function MessageInput({ onSendMessage, onTyping, replyTo, onCance
     setShowPicker(false);
   };
 
-  const startRecording = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-        console.log('Voice message recorded:', audioBlob);
-        stream.getTracks().forEach(track => track.stop());
-      };
-
-      mediaRecorder.start();
-      setIsRecording(true);
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
+  // Update text when transcript changes
+  useEffect(() => {
+    if (transcript) {
+      setText(transcript);
     }
-  };
-
-  const stopRecording = () => {
-    if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-    }
-  };
+  }, [transcript]);
 
   return (
     <div className="border-t">
@@ -108,7 +81,14 @@ export default function MessageInput({ onSendMessage, onTyping, replyTo, onCance
       <form onSubmit={handleSubmit} className="p-4 flex">
         <Input value={text} onChange={handleChange} placeholder="Введите сообщение..." className="flex-1 mr-2" />
         <Button type="button" onClick={() => setShowPicker(!showPicker)} className="mr-2">😀</Button>
-        <Button type="button" onClick={() => onSendMessage('🎤 Голосовое сообщение')} className="mr-2">🎤</Button>
+        <Button
+          type="button"
+          onClick={isListening ? stopListening : startListening}
+          className={`mr-2 ${isListening ? 'bg-red-500' : ''}`}
+          disabled={!isSupported}
+        >
+          {isListening ? '⏹️' : '🎤'}
+        </Button>
         <Button type="submit">Отправить</Button>
       </form>
       {showPicker && (

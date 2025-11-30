@@ -46,6 +46,11 @@ export class AuthService {
     username: string;
     displayName: string;
     password: string;
+    gender?: 'male' | 'female' | 'other';
+    age?: number;
+    interests?: string[];
+    hobbies?: string[];
+    games?: string[];
   }): Promise<User | null> {
     const existingUser = await db.getUserByEmail(userData.email);
     if (existingUser) return null;
@@ -57,6 +62,11 @@ export class AuthService {
       username: userData.username,
       displayName: userData.displayName,
       password: hashedPassword,
+      gender: userData.gender,
+      age: userData.age,
+      interests: userData.interests || [],
+      hobbies: userData.hobbies || [],
+      games: userData.games || [],
     });
 
     return user;

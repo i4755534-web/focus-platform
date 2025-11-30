@@ -52,6 +52,11 @@ export const useWebRTC = () => {
   // Get user media (camera/microphone)
   const getUserMedia = useCallback(async (constraints: MediaStreamConstraints) => {
     try {
+      // Check if media devices are supported
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error('Media devices not supported');
+      }
+
       const stream = await navigator.mediaDevices.getUserMedia(constraints);
       localStreamRef.current = stream;
       setCallState(prev => ({ ...prev, localStream: stream }));
@@ -59,6 +64,16 @@ export const useWebRTC = () => {
       return stream;
     } catch (error) {
       logger.error('Failed to get user media', error as Error);
+      // Provide user-friendly error messages
+      if (error instanceof Error) {
+        if (error.name === 'NotAllowedError') {
+          throw new Error('Camera/microphone access denied. Please allow access and try again.');
+        } else if (error.name === 'NotFoundError') {
+          throw new Error('No camera/microphone found. Please connect a device and try again.');
+        } else if (error.name === 'NotReadableError') {
+          throw new Error('Camera/microphone is already in use by another application.');
+        }
+      }
       throw error;
     }
   }, []);

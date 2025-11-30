@@ -7,6 +7,12 @@ export interface User {
   displayName: string;
   password: string;
   createdAt: Date;
+  gender?: 'male' | 'female' | 'other';
+  age?: number;
+  interests: string[];
+  hobbies: string[];
+  games: string[];
+  bio?: string;
 }
 
 export interface Channel {
@@ -42,6 +48,11 @@ class MockDatabase {
       displayName: 'Администратор',
       password: 'hashedpass',
       createdAt: new Date('2024-01-01'),
+      gender: 'male',
+      age: 30,
+      interests: ['programming', 'gaming'],
+      hobbies: ['coding', 'reading'],
+      games: ['strategy', 'rpg'],
     };
 
     const user1: User = {
@@ -51,10 +62,45 @@ class MockDatabase {
       displayName: 'Пользователь 1',
       password: 'hashedpass',
       createdAt: new Date('2024-01-15'),
+      gender: 'female',
+      age: 25,
+      interests: ['music', 'art'],
+      hobbies: ['painting', 'singing'],
+      games: ['puzzle', 'adventure'],
+    };
+
+    const user2: User = {
+      id: 'user-2',
+      email: 'user2@focus.com',
+      username: 'user2',
+      displayName: 'Пользователь 2',
+      password: 'hashedpass',
+      createdAt: new Date('2024-01-20'),
+      gender: 'male',
+      age: 28,
+      interests: ['programming', 'gaming'],
+      hobbies: ['coding', 'gaming'],
+      games: ['strategy', 'rpg'],
+    };
+
+    const user3: User = {
+      id: 'user-3',
+      email: 'user3@focus.com',
+      username: 'user3',
+      displayName: 'Пользователь 3',
+      password: 'hashedpass',
+      createdAt: new Date('2024-01-25'),
+      gender: 'female',
+      age: 22,
+      interests: ['sports', 'travel'],
+      hobbies: ['running', 'photography'],
+      games: ['sports', 'simulation'],
     };
 
     this.users.set(admin.id, admin);
     this.users.set(user1.id, user1);
+    this.users.set(user2.id, user2);
+    this.users.set(user3.id, user3);
 
     // Create default channels
     const general: Channel = {
@@ -148,6 +194,10 @@ class MockDatabase {
     };
     this.messages.set(id, message);
     return message;
+  }
+
+  async getAllUsers(): Promise<User[]> {
+    return Array.from(this.users.values());
   }
 }
 
