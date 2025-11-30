@@ -4,44 +4,45 @@ import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
 import {
   ShoppingCart,
-  Star,
-  Download,
-  Zap,
-  Shield,
-  Users,
-  MessageSquare,
-  Video,
-  FileText,
-  Brain,
-  Search,
-  Filter,
-  Grid,
-  List,
-  Heart,
-  ExternalLink,
-  CheckCircle,
-  AlertCircle,
-  Clock,
-  DollarSign,
-  Award,
-  TrendingUp,
   Package,
   Settings,
-  Play,
-  Pause,
-  Trash2,
-  Edit,
+  Star,
+  Users,
+  DollarSign,
+  TrendingUp,
+  Download,
+  MessageSquare,
+  Zap,
+  Shield,
+  Award,
   Plus,
-  Minus
+  Search,
+  Grid,
+  List,
+  CheckCircle,
+  Trash2,
+  Play,
+  ExternalLink,
+  FileText,
+  Edit
 } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import PluginStore from './PluginStore';
+import PluginManager from './PluginManager';
+import PluginInstaller from './PluginInstaller';
+import { usePlugins } from '@/hooks/usePlugins';
+
+interface MarketplaceStats {
+  totalPlugins: number;
+  totalDownloads: number;
+  totalRevenue: number;
+  activeInstallations: number;
+  topCategories: { name: string; count: number }[];
+}
 
 interface Plugin {
   id: string;

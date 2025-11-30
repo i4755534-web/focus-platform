@@ -13,6 +13,11 @@ export interface User {
   hobbies: string[];
   games: string[];
   bio?: string;
+  photos: string[];
+  location?: {
+    lat: number;
+    lng: number;
+  };
 }
 
 export interface Channel {
@@ -53,6 +58,8 @@ class MockDatabase {
       interests: ['programming', 'gaming'],
       hobbies: ['coding', 'reading'],
       games: ['strategy', 'rpg'],
+      photos: [],
+      location: { lat: 55.7558, lng: 37.6173 }, // Moscow
     };
 
     const user1: User = {
@@ -67,6 +74,8 @@ class MockDatabase {
       interests: ['music', 'art'],
       hobbies: ['painting', 'singing'],
       games: ['puzzle', 'adventure'],
+      photos: ['/avatars/user1-1.jpg', '/avatars/user1-2.jpg'],
+      location: { lat: 59.9343, lng: 30.3351 }, // St. Petersburg
     };
 
     const user2: User = {
@@ -81,6 +90,8 @@ class MockDatabase {
       interests: ['programming', 'gaming'],
       hobbies: ['coding', 'gaming'],
       games: ['strategy', 'rpg'],
+      photos: ['/avatars/user2-1.jpg'],
+      location: { lat: 55.7558, lng: 37.6173 }, // Moscow
     };
 
     const user3: User = {
@@ -95,6 +106,8 @@ class MockDatabase {
       interests: ['sports', 'travel'],
       hobbies: ['running', 'photography'],
       games: ['sports', 'simulation'],
+      photos: ['/avatars/user3-1.jpg', '/avatars/user3-2.jpg', '/avatars/user3-3.jpg'],
+      location: { lat: 56.8389, lng: 60.6057 }, // Yekaterinburg
     };
 
     this.users.set(admin.id, admin);
@@ -144,10 +157,11 @@ class MockDatabase {
     return null;
   }
 
-  async createUser(userData: Omit<User, 'id' | 'createdAt'>): Promise<User> {
+  async createUser(userData: Omit<User, 'id' | 'createdAt' | 'photos'> & { photos?: string[] }): Promise<User> {
     const id = `user-${Date.now()}`;
     const user: User = {
       ...userData,
+      photos: userData.photos || [],
       id,
       createdAt: new Date(),
     };

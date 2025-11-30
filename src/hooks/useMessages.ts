@@ -25,10 +25,10 @@ export const useMessages = create<MessagesState>((set, get) => ({
 
   fetchMessages: async (chatId: string) => {
     try {
-      const response = await fetch(`/api/channels/${chatId}/messages`);
+      const response = await fetch(`/api/chats/${chatId}/messages`);
       const data = await response.json();
       set((state) => ({
-        messages: { ...state.messages, [chatId]: data.messages || [] },
+        messages: { ...state.messages, [chatId]: data || [] },
       }));
     } catch (error) {
       console.error('Failed to fetch messages:', error);
@@ -37,16 +37,16 @@ export const useMessages = create<MessagesState>((set, get) => ({
 
   sendMessage: async (chatId: string, text: string, sender: string, replyTo?: { id: string; text: string; sender: string }) => {
     try {
-      const response = await fetch(`/api/channels/${chatId}/messages`, {
+      const response = await fetch(`/api/chats/${chatId}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: text, authorId: sender }),
+        body: JSON.stringify({ text, sender }),
       });
       const data = await response.json();
       set((state) => ({
         messages: {
           ...state.messages,
-          [chatId]: [...(state.messages[chatId] || []), data.message],
+          [chatId]: [...(state.messages[chatId] || []), data],
         },
       }));
       toast.success('Сообщение отправлено!');

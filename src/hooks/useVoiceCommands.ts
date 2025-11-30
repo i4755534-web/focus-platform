@@ -214,13 +214,39 @@ export const useVoiceCommands = () => {
 
       recognition.onerror = (event) => {
         const error = event.error;
+        let errorMessage = 'Произошла ошибка распознавания речи';
+        let userFriendlyMessage = '';
+
+        switch (error) {
+          case 'not-allowed':
+            errorMessage = 'Доступ к микрофону заблокирован';
+            userFriendlyMessage = 'Пожалуйста, разрешите доступ к микрофону в настройках браузера и попробуйте снова';
+            break;
+          case 'no-speech':
+            errorMessage = 'Речь не обнаружена';
+            userFriendlyMessage = 'Попробуйте говорить громче или проверьте микрофон';
+            break;
+          case 'audio-capture':
+            errorMessage = 'Ошибка захвата аудио';
+            userFriendlyMessage = 'Проверьте настройки микрофона';
+            break;
+          case 'network':
+            errorMessage = 'Сетевая ошибка';
+            userFriendlyMessage = 'Проверьте подключение к интернету';
+            break;
+          default:
+            errorMessage = `Ошибка распознавания: ${error}`;
+            userFriendlyMessage = 'Попробуйте перезагрузить страницу';
+        }
+
         setVoiceState(prev => ({
           ...prev,
-          error: `Ошибка распознавания: ${error}`,
+          error: errorMessage,
           isListening: false,
         }));
-        logger.error('Voice recognition error', new Error(error));
-        speak('Произошла ошибка распознавания речи');
+
+        logger.error('Voice recognition error', new Error(error), { errorType: error });
+        speak(userFriendlyMessage || errorMessage);
       };
 
       recognition.onend = () => {
