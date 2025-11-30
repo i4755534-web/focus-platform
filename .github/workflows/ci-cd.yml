@@ -71,9 +71,33 @@ jobs:
             package.json
             package-lock.json
 
+  # Docker Build
+  docker-build:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/focus:latest
+
   # Security Scan
   security:
-    needs: build
+    needs: [build, docker-build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -95,7 +119,7 @@ jobs:
 
   # Performance Testing
   performance:
-    needs: build
+    needs: [build, docker-build]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -123,7 +147,7 @@ jobs:
 
   # Deploy to Staging
   deploy-staging:
-    needs: [quality, build, security, performance]
+    needs: [quality, build, docker-build, security, performance]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/develop'
     environment: staging
@@ -139,12 +163,14 @@ jobs:
       - name: Deploy to staging
         run: |
           echo "Deploying to staging environment"
-          # Add your staging deployment commands here
-          # Example: rsync, docker push, etc.
+          docker pull ${{ secrets.DOCKER_USERNAME }}/focus:latest
+          docker stop focus-staging || true
+          docker rm focus-staging || true
+          docker run -d --name focus-staging -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/focus:latest
 
   # Deploy to Production
   deploy-production:
-    needs: [quality, build, security, performance]
+    needs: [quality, build, docker-build, security, performance]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
     environment: production
@@ -160,8 +186,10 @@ jobs:
       - name: Deploy to production
         run: |
           echo "Deploying to production environment"
-          # Add your production deployment commands here
-          # Example: blue-green deployment, canary releases, etc.
+          docker pull ${{ secrets.DOCKER_USERNAME }}/focus:latest
+          docker stop focus-prod || true
+          docker rm focus-prod || true
+          docker run -d --name focus-prod -p 3000:3000 ${{ secrets.DOCKER_USERNAME }}/focus:latest
 
   # E2E Testing
   e2e:
