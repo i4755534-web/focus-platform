@@ -51,7 +51,7 @@ class MockDatabase {
       email: 'admin@focus.com',
       username: 'admin',
       displayName: 'Администратор',
-      password: 'hashedpass',
+      password: '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // 'password'
       createdAt: new Date('2024-01-01'),
       gender: 'male',
       age: 30,

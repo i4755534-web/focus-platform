@@ -1,89 +1,89 @@
-# FOCUS - Educational Communication Platform
+# FOCUS - Образовательная коммуникационная платформа
 
-FOCUS is a comprehensive educational communication platform built with Next.js 15, TypeScript, and modern web technologies. It provides a complete solution for online education, collaboration, and communication.
+FOCUS - это комплексная образовательная коммуникационная платформа, построенная с использованием Next.js 15, TypeScript и современных веб-технологий. Она предоставляет полное решение для онлайн-образования, совместной работы и общения.
 
-## Features
+## Возможности
 
-### Core Functionality
-- **Real-time Chat**: Instant messaging with file sharing and emoji support
-- **Video Calls**: WebRTC-based video conferencing with screen sharing
-- **Collaborative Tools**: Whiteboard, document editing, and real-time collaboration
-- **File Management**: Version control, cloud storage, and file sharing
-- **User Management**: Authentication, profiles, and role-based access
+### Основной функционал
+- **Чат в реальном времени**: Мгновенные сообщения с поддержкой файлов и emoji
+- **Видеозвонки**: Видеоконференции на базе WebRTC с демонстрацией экрана
+- **Инструменты совместной работы**: Доска, редактирование документов и совместная работа в реальном времени
+- **Управление файлами**: Контроль версий, облачное хранилище и обмен файлами
+- **Управление пользователями**: Аутентификация, профили и ролевая система доступа
 
-### Advanced Features
-- **AI Integration**: Smart search, recommendations, and voice commands
-- **Web3 Support**: Blockchain integration and cryptocurrency features
-- **Plugin System**: Extensible marketplace for third-party integrations
-- **Multi-language**: Support for multiple languages and RTL layouts
-- **Mobile Apps**: Native iOS and Android applications
-- **PWA**: Progressive Web App with offline capabilities
+### Продвинутые возможности
+- **AI интеграция**: Умный поиск, рекомендации и голосовые команды
+- **Web3 поддержка**: Интеграция с блокчейном и криптовалютные функции
+- **Система плагинов**: Расширяемый маркетплейс для сторонних интеграций
+- **Многоязычность**: Поддержка нескольких языков и RTL раскладок
+- **Мобильные приложения**: Нативные приложения для iOS и Android
+- **PWA**: Прогрессивное веб-приложение с оффлайн возможностями
 
-### Enterprise Features
-- **Multi-tenant Architecture**: Separate workspaces for different organizations
-- **Admin Dashboard**: Complete platform management and analytics
-- **Security**: Advanced security features, rate limiting, and audit logs
-- **Backup & Recovery**: Automated backups and disaster recovery
-- **Performance**: Optimized loading, caching, and scalability
+### Корпоративные возможности
+- **Мульти-тенант архитектура**: Отдельные рабочие пространства для разных организаций
+- **Админ панель**: Полное управление платформой и аналитика
+- **Безопасность**: Продвинутые функции безопасности, ограничение скорости и аудит логов
+- **Резервное копирование**: Автоматизированные бэкапы и восстановление после сбоев
+- **Производительность**: Оптимизированная загрузка, кэширование и масштабируемость
 
-## Technology Stack
+## Технологический стек
 
 ### Frontend
-- **Next.js 15** - React framework with App Router
-- **TypeScript** - Type-safe JavaScript
-- **Tailwind CSS** - Utility-first CSS framework
-- **shadcn/ui** - Modern UI components
-- **Zustand** - State management
-- **TanStack Query** - Data fetching and caching
+- **Next.js 15** - React фреймворк с App Router
+- **TypeScript** - Типизированный JavaScript
+- **Tailwind CSS** - Utility-first CSS фреймворк
+- **shadcn/ui** - Современные UI компоненты
+- **Zustand** - Управление состоянием
+- **TanStack Query** - Загрузка данных и кэширование
 
 ### Backend
-- **Next.js API Routes** - Serverless API endpoints
-- **JWT Authentication** - Secure token-based auth
-- **WebRTC** - Real-time communication
-- **Socket.io** - WebSocket connections
+- **Next.js API Routes** - Serverless API эндпоинты
+- **JWT аутентификация** - Безопасная аутентификация на токенах
+- **WebRTC** - Коммуникация в реальном времени
+- **Socket.io** - WebSocket соединения
 
-### Database & Storage
-- **Mock Database** - In-memory data storage (can be replaced with real DB)
-- **Redis-like Caching** - In-memory caching system
-- **File Storage** - Local file system (can be replaced with cloud storage)
+### База данных и хранилище
+- **Mock база данных** - In-memory хранение данных (можно заменить на реальную БД)
+- **Redis-like кэширование** - In-memory система кэширования
+- **Файловое хранилище** - Локальная файловая система (можно заменить на облачное хранилище)
 
-### DevOps & Testing
-- **Docker** - Containerization
-- **Jest** - Unit testing
-- **Playwright** - E2E testing
-- **ESLint** - Code linting
-- **GitHub Actions** - CI/CD pipeline
+### DevOps и тестирование
+- **Docker** - Контейнеризация
+- **Jest** - Unit тестирование
+- **Playwright** - E2E тестирование
+- **ESLint** - Линтинг кода
+- **GitHub Actions** - CI/CD пайплайн
 
-## Getting Started
+## Быстрый старт
 
-### Prerequisites
+### Предварительные требования
 - Node.js 18+
-- npm or yarn
+- npm или yarn
 - Git
 
-### Installation
+### Установка
 
-1. Clone the repository:
+1. Клонируйте репозиторий:
 ```bash
 git clone <repository-url>
 cd focus
 ```
 
-2. Install dependencies:
+2. Установите зависимости:
 ```bash
 npm install
 ```
 
-3. Start the development server:
+3. Запустите сервер разработки:
 ```bash
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser.
+4. Откройте [http://localhost:3000](http://localhost:3000) в браузере.
 
-### Environment Setup
+### Настройка окружения
 
-Create a `.env.local` file in the root directory:
+Создайте файл `.env.local` в корневой директории:
 
 ```env
 NEXTAUTH_SECRET=your-secret-key

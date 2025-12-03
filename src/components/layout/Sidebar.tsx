@@ -31,7 +31,6 @@ const navigation = [
   { name: 'VR Комнаты', href: '/vr', icon: '🎮' },
   { name: 'Избранное', href: '/favorites', icon: '⭐' },
   { name: 'Достижения', href: '/achievements', icon: '🏆' },
-  { name: 'Плагины', href: '/plugins', icon: '🔌' },
   { name: 'Аналитика', href: '/analytics', icon: '📊' },
   { name: 'Интеграции', href: '/integrations', icon: '🔗' },
   { name: 'Профиль', href: '/profile', icon: '👤' },
