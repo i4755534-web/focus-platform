@@ -19,6 +19,26 @@ interface CallHistory {
   status: 'completed' | 'missed' | 'cancelled';
 }
 
+// Mock call history - вынесено за пределы компонента для соблюдения правил React
+const mockCallHistory: CallHistory[] = [
+  {
+    id: '1',
+    participants: ['user1', 'user2'],
+    type: 'video',
+    duration: 1800, // 30 minutes
+    timestamp: new Date('2024-12-06T10:00:00Z'), // Fixed date for demo
+    status: 'completed',
+  },
+  {
+    id: '2',
+    participants: ['user1', 'user3'],
+    type: 'audio',
+    duration: 900, // 15 minutes
+    timestamp: new Date('2024-12-05T10:00:00Z'), // Fixed date for demo
+    status: 'completed',
+  },
+];
+
 export default function CallsPage() {
   const { user } = useAuth();
   const [isInCall, setIsInCall] = useState(false);
@@ -26,25 +46,6 @@ export default function CallsPage() {
   const [callType, setCallType] = useState<'audio' | 'video'>('video');
   const [participantInput, setParticipantInput] = useState('');
 
-  // Mock call history
-  const callHistory: CallHistory[] = [
-    {
-      id: '1',
-      participants: ['user1', 'user2'],
-      type: 'video',
-      duration: 1800, // 30 minutes
-      timestamp: new Date(Date.now() - 86400000), // 1 day ago
-      status: 'completed',
-    },
-    {
-      id: '2',
-      participants: ['user1', 'user3'],
-      type: 'audio',
-      duration: 900, // 15 minutes
-      timestamp: new Date(Date.now() - 172800000), // 2 days ago
-      status: 'completed',
-    },
-  ];
 
   const startCall = (participants: string[], type: 'audio' | 'video') => {
     setCallParticipants(participants);
@@ -202,7 +203,7 @@ export default function CallsPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {callHistory.map((call) => (
+            {mockCallHistory.map((call) => (
               <div
                 key={call.id}
                 className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 cursor-pointer"

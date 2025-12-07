@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 
 // In-memory storage for demo (use database in production)
-let messagesStore: Record<string, Array<{
+const messagesStore: Record<string, Array<{
   id: string;
   text: string;
   sender: string;
