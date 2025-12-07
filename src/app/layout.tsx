@@ -10,6 +10,7 @@ import { queryClient } from '@/lib/api/client';
 import { config } from '@/lib/web3';
 import { useNotifications } from '@/hooks/useNotifications';
 import { useEffect } from 'react';
+import { ErrorBoundary } from '@/components/error/ErrorBoundary';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -53,7 +54,9 @@ export default function RootLayout({
         <WagmiProvider config={config}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <QueryClientProvider client={queryClient}>
-              {children}
+              <ErrorBoundary>
+                {children}
+              </ErrorBoundary>
               <Toaster />
             </QueryClientProvider>
           </ThemeProvider>

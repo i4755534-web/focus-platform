@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
-import { db } from './database';
-import type { User } from './database';
+import { db } from './database/index';
+import type { User } from './database/mock';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'secret';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useCallback, useMemo, memo } from 'react';
 import { useMessages } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
 import { useFavorites } from '@/hooks/useFavorites';
@@ -22,37 +22,37 @@ interface MessageListProps {
   onReply?: (message: Message) => void;
 }
 
-export default function MessageList({ messages = [], chatId, onPinMessage, onReply }: MessageListProps) {
+const MessageList = memo(function MessageList({ messages = [], chatId, onPinMessage, onReply }: MessageListProps) {
   const { addReaction } = useMessages();
   const { user } = useAuth();
   const { addFavorite, isFavorite } = useFavorites();
   const [hoveredMessage, setHoveredMessage] = useState<string | null>(null);
 
-  const handleReaction = (messageId: string, emoji: string) => {
+  const handleReaction = useCallback((messageId: string, emoji: string) => {
     if (user && chatId) {
       addReaction(chatId, messageId, emoji, user.id);
     }
-  };
+  }, [user, chatId, addReaction]);
 
-  const handlePin = (messageId: string) => {
+  const handlePin = useCallback((messageId: string) => {
     if (onPinMessage) {
       onPinMessage(messageId);
     }
-  };
+  }, [onPinMessage]);
 
-  const handleDelete = (messageId: string) => {
+  const handleDelete = useCallback((messageId: string) => {
     if (user?.role === 'admin' || user?.role === 'moderator') {
       console.log('Deleting message:', messageId);
     }
-  };
+  }, [user?.role]);
 
-  const handleReply = (msg: Message) => {
+  const handleReply = useCallback((msg: Message) => {
     if (onReply) {
       onReply(msg);
     }
-  };
+  }, [onReply]);
 
-  const handleFavorite = (msg: Message) => {
+  const handleFavorite = useCallback((msg: Message) => {
     if (chatId) {
       addFavorite({
         type: 'message',
@@ -60,7 +60,7 @@ export default function MessageList({ messages = [], chatId, onPinMessage, onRep
         content: msg.text,
       });
     }
-  };
+  }, [chatId, addFavorite]);
 
   return (
     <div className="flex-1 p-4 overflow-y-auto">
@@ -113,4 +113,6 @@ export default function MessageList({ messages = [], chatId, onPinMessage, onRep
       ))}
     </div>
   );
-}
+});
+
+export default MessageList;

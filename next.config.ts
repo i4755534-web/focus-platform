@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'standalone',
+  output: process.env.EXPORT_STATIC ? 'export' : 'standalone',
+  trailingSlash: process.env.EXPORT_STATIC ? true : false,
+  images: {
+    unoptimized: process.env.EXPORT_STATIC ? true : false,
+  },
   devIndicators: false,
   async headers() {
     return [

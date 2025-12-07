@@ -43,7 +43,8 @@ FOCUS - это комплексная образовательная комму�
 - **Socket.io** - WebSocket соединения
 
 ### База данных и хранилище
-- **Mock база данных** - In-memory хранение данных (можно заменить на реальную БД)
+- **PostgreSQL** - Реляционная база данных для production
+- **Mock база данных** - In-memory хранение для разработки
 - **Redis-like кэширование** - In-memory система кэширования
 - **Файловое хранилище** - Локальная файловая система (можно заменить на облачное хранилище)
 
@@ -83,14 +84,24 @@ npm run dev
 
 ### Настройка окружения
 
-Создайте файл `.env.local` в корневой директории:
+1. Скопируйте файл с примером переменных окружения:
+```bash
+cp .env.example .env.local
+```
+
+2. Отредактируйте `.env.local` и заполните необходимые значения:
 
 ```env
-NEXTAUTH_SECRET=your-secret-key
+# Обязательные переменные
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+DATABASE_URL=postgresql://username:password@localhost:5432/focus_db
+
+# Для разработки
+NEXTAUTH_SECRET=your-nextauth-secret-key
 NEXTAUTH_URL=http://localhost:3000
-DATABASE_URL=your-database-url
-REDIS_URL=your-redis-url
 ```
+
+Смотрите [.env.example](.env.example) для полного списка доступных переменных.
 
 ## Project Structure
 
@@ -177,6 +188,65 @@ npm run build
 npm start
 ```
 
+## Развертывание
+
+### 🚀 Vercel (Рекомендуется для Next.js)
+
+**Бесплатный тариф Vercel идеально подходит для Next.js приложений!**
+
+1. **Регистрация на Vercel:**
+   - Перейдите на [vercel.com](https://vercel.com)
+   - Зарегистрируйтесь с GitHub аккаунтом
+
+2. **Импорт проекта:**
+   - Нажмите "New Project"
+   - Выберите ваш GitHub репозиторий
+   - Vercel автоматически распознает Next.js
+
+3. **Настройка переменных окружения:**
+   ```env
+   JWT_SECRET=your-secret-key
+   DATABASE_URL=your-database-url
+   NEXTAUTH_SECRET=your-nextauth-secret
+   NEXTAUTH_URL=https://your-project.vercel.app
+   ```
+
+4. **Развертывание:**
+   - Vercel автоматически развернет приложение
+   - Каждый push в main ветку обновляет production
+   - Pull requests создают preview deployments
+
+### 📄 GitHub Pages (Статическая версия)
+
+**Для демонстрации интерфейса (без серверных функций):**
+
+1. **Включите GitHub Pages:**
+   - В репозитории: Settings → Pages
+   - Source: "GitHub Actions"
+
+2. **Workflow автоматически:**
+   - Соберет статическую версию
+   - Развернет на GitHub Pages
+
+3. **Ограничения:**
+   - Нет API routes (только статические страницы)
+   - Нет серверных функций
+   - Только для демонстрации UI
+
+### 🐳 Другие бесплатные хостинги
+
+- **Netlify**: Бесплатный тариф, хорошая поддержка Next.js
+- **Railway**: Бесплатный тариф для full-stack приложений
+- **Render**: Бесплатный тариф с PostgreSQL
+- **Fly.io**: Бесплатный тариф для Docker приложений
+
+### 🔧 Настройка секретов
+
+Для Vercel добавьте секреты в проект settings:
+- `VERCEL_TOKEN` - токен доступа
+- `VERCEL_ORG_ID` - ID организации
+- `VERCEL_PROJECT_ID` - ID проекта
+
 ## Contributing
 
 1. Fork the repository
@@ -201,6 +271,27 @@ npm run test:integration
 ```bash
 npm run test:e2e
 ```
+
+## CI/CD
+
+Проект использует GitHub Actions для автоматического тестирования и развертывания.
+
+### Автоматические проверки:
+- **TypeScript** - Проверка типов
+- **ESLint** - Линтинг кода
+- **Unit тесты** - Jest с покрытием
+- **E2E тесты** - Playwright
+- **Lighthouse** - Производительность и доступность
+- **Security scans** - Snyk, CodeQL, GitLeaks
+
+### Развертывание:
+- **Docker** - Контейнеризация и автоматическая сборка
+- **Staging** - Автоматическое развертывание из develop ветки
+- **Production** - Автоматическое развертывание из main ветки
+
+### Статус CI/CD:
+[![CI/CD](https://github.com/your-username/focus/actions/workflows/ci.yml/badge.svg)](https://github.com/your-username/focus/actions/workflows/ci.yml)
+[![Security](https://github.com/your-username/focus/actions/workflows/security.yml/badge.svg)](https://github.com/your-username/focus/actions/workflows/security.yml)
 
 ## Security
 

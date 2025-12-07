@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 // In-memory storage for demo (use database in production)
 let messagesStore: Record<string, Array<{
@@ -20,6 +21,16 @@ let messagesStore: Record<string, Array<{
   ],
 };
 
+const sendMessageSchema = z.object({
+  text: z.string().min(1, 'Message text is required').max(1000, 'Message too long'),
+  sender: z.string().min(1, 'Sender is required'),
+  replyTo: z.object({
+    id: z.string(),
+    text: z.string(),
+    sender: z.string(),
+  }).optional(),
+});
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ chatId: string }> }
@@ -33,26 +44,32 @@ export async function POST(
   request: NextRequest,
   { params }: { params: Promise<{ chatId: string }> }
 ) {
-  const { chatId } = await params;
-  const body = await request.json();
-  const { text, sender } = body;
+  try {
+    const { chatId } = await params;
+    const body = await request.json();
+    const validatedData = sendMessageSchema.parse(body);
+    const { text, sender, replyTo } = validatedData;
 
-  if (!text || !sender) {
-    return NextResponse.json({ error: 'Missing text or sender' }, { status: 400 });
+    const newMessage = {
+      id: Date.now().toString(),
+      text,
+      sender,
+      timestamp: new Date().toLocaleTimeString(),
+      ...(replyTo && { replyTo }),
+    };
+
+    if (!messagesStore[chatId]) {
+      messagesStore[chatId] = [];
+    }
+
+    messagesStore[chatId].push(newMessage);
+
+    return NextResponse.json(newMessage, { status: 201 });
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: 'Validation failed', details: error.issues }, { status: 400 });
+    }
+    console.error('Send message error:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
-
-  const newMessage = {
-    id: Date.now().toString(),
-    text,
-    sender,
-    timestamp: new Date().toLocaleTimeString(),
-  };
-
-  if (!messagesStore[chatId]) {
-    messagesStore[chatId] = [];
-  }
-
-  messagesStore[chatId].push(newMessage);
-
-  return NextResponse.json(newMessage, { status: 201 });
 }

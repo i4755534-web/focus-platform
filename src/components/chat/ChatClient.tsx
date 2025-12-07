@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useMemo, memo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useMessages } from '@/hooks/useMessages';
 import { useTyping } from '@/hooks/useTyping';
@@ -19,7 +19,7 @@ interface ChatClientProps {
   chatId: string;
 }
 
-export default function ChatClient({ chatId }: ChatClientProps) {
+const ChatClient = memo(function ChatClient({ chatId }: ChatClientProps) {
   const { user } = useAuth();
   const { messages, fetchMessages, sendMessage, pinMessage, pinnedMessages } = useMessages();
   const { typing, setTyping } = useTyping();
@@ -46,13 +46,7 @@ export default function ChatClient({ chatId }: ChatClientProps) {
     }
   }, [chatId, fetchMessages]);
 
-  if (!chatId) {
-    return <div className="flex items-center justify-center h-full text-red-500">Ошибка: ID чата не указан</div>;
-  }
-
-  const chat = mockChats.find(c => c.id === chatId);
-
-  const handleSendMessage = (text: string) => {
+  const handleSendMessage = useCallback((text: string) => {
     if (!text.trim()) return;
 
     if (!user) {
@@ -67,9 +61,9 @@ export default function ChatClient({ chatId }: ChatClientProps) {
     } catch (error) {
       console.error('Ошибка отправки сообщения:', error);
     }
-  };
+  }, [chatId, user, replyTo, sendMessage, setTyping]);
 
-  const handlePinMessage = (messageId: string) => {
+  const handlePinMessage = useCallback((messageId: string) => {
     if (!messageId) return;
 
     try {
@@ -77,14 +71,14 @@ export default function ChatClient({ chatId }: ChatClientProps) {
     } catch (error) {
       console.error('Ошибка закрепления сообщения:', error);
     }
-  };
+  }, [chatId, pinMessage]);
 
-  const handleReply = (message: { id: string; text: string; sender: string }) => {
+  const handleReply = useCallback((message: { id: string; text: string; sender: string }) => {
     if (!message.id) return;
     setReplyTo(message);
-  };
+  }, []);
 
-  const handleTyping = (isTyping: boolean) => {
+  const handleTyping = useCallback((isTyping: boolean) => {
     if (!user) return;
 
     try {
@@ -92,7 +86,15 @@ export default function ChatClient({ chatId }: ChatClientProps) {
     } catch (error) {
       console.error('Ошибка установки статуса печати:', error);
     }
-  };
+  }, [chatId, user, setTyping]);
+
+  const chatMessages = useMemo(() => messages[chatId] || [], [messages, chatId]);
+  const chatPinned = useMemo(() => pinnedMessages[chatId] || [], [pinnedMessages, chatId]);
+  const typingUsers = useMemo(() => typing[chatId] || [], [typing, chatId]);
+
+  if (!chatId) {
+    return <div className="flex items-center justify-center h-full text-red-500">Ошибка: ID чата не указан</div>;
+  }
 
   if (isLoading) {
     return (
@@ -118,6 +120,8 @@ export default function ChatClient({ chatId }: ChatClientProps) {
     );
   }
 
+  const chat = mockChats.find(c => c.id === chatId);
+
   if (!chat) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -125,10 +129,6 @@ export default function ChatClient({ chatId }: ChatClientProps) {
       </div>
     );
   }
-
-  const chatMessages = messages[chatId] || [];
-  const chatPinned = pinnedMessages[chatId] || [];
-  const typingUsers = typing[chatId] || [];
 
   return (
     <div className="flex flex-col h-full">
@@ -160,4 +160,6 @@ export default function ChatClient({ chatId }: ChatClientProps) {
       />
     </div>
   );
-}
+});
+
+export default ChatClient;
