@@ -8,18 +8,39 @@ const nextConfig: NextConfig = {
   },
   devIndicators: false,
   webpack: (config, { isServer }) => {
-    // Exclude test files from webpack processing
+    // Aggressively exclude all test files and dependencies that cause issues
     config.module.rules.push({
-      test: /\.(test|spec)\.(js|jsx|ts|tsx)$/,
-      loader: 'ignore-loader',
+      test: /\.(test|spec)\.(js|jsx|ts|tsx|mjs)$/,
+      use: 'null-loader',
     });
 
-    // Ignore test directories
+    // Ignore problematic test directories and files
     config.resolve.alias = {
       ...config.resolve.alias,
-      '**/test': false,
-      '**/tests': false,
+      '**/test/**': false,
+      '**/tests/**': false,
+      '**/test.*': false,
+      '**/spec.*': false,
+      'tap': false,
+      'tape': false,
+      'fastbench': false,
+      'desm': false,
+      'why-is-node-running': false,
+      'pino-elasticsearch': false,
     };
+
+    // Add externals for problematic modules
+    if (!isServer) {
+      config.externals = config.externals || [];
+      config.externals.push({
+        'tap': 'commonjs tap',
+        'tape': 'commonjs tape',
+        'fastbench': 'commonjs fastbench',
+        'desm': 'commonjs desm',
+        'why-is-node-running': 'commonjs why-is-node-running',
+        'pino-elasticsearch': 'commonjs pino-elasticsearch',
+      });
+    }
 
     return config;
   },
