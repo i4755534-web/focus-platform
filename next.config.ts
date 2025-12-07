@@ -7,6 +7,22 @@ const nextConfig: NextConfig = {
     unoptimized: process.env.EXPORT_STATIC ? true : false,
   },
   devIndicators: false,
+  webpack: (config, { isServer }) => {
+    // Exclude test files from webpack processing
+    config.module.rules.push({
+      test: /\.(test|spec)\.(js|jsx|ts|tsx)$/,
+      loader: 'ignore-loader',
+    });
+
+    // Ignore test directories
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '**/test': false,
+      '**/tests': false,
+    };
+
+    return config;
+  },
   async headers() {
     return [
       {
