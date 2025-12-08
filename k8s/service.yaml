@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: focus-service
+  labels:
+    app: focus
+spec:
+  selector:
+    app: focus
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+    protocol: TCP
+  type: ClusterIP

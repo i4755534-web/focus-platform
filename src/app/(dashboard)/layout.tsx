@@ -7,6 +7,7 @@ import Sidebar from '@/components/layout/Sidebar';
 import Topbar from '@/components/layout/Topbar';
 import MobileNav from '@/components/layout/MobileNav';
 import AIAssistant from '@/components/ai/AIAssistant';
+import AIChatBot from '@/components/ai/AIChatBot';
 import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
 import { ErrorBoundary } from '@/components/error/ErrorBoundary';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
@@ -68,6 +69,7 @@ export default function DashboardLayout({
         </main>
         <MobileNav />
         <AIAssistant />
+        <AIChatBot />
         <PWAInstallPrompt />
       </div>
     </div>
