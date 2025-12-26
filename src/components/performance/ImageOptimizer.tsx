@@ -234,18 +234,4 @@ export function inlineCriticalCSS(css: string) {
   }, [css]);
 }
 
-// Bundle analyzer (development only)
-export function BundleAnalyzer() {
-  useEffect(() => {
-    if (process.env.NODE_ENV === 'development') {
-      // Import webpack bundle analyzer in development
-      import('webpack-bundle-analyzer').then(({ BundleAnalyzerPlugin }) => {
-        console.log('Bundle analyzer loaded');
-      }).catch(() => {
-        console.log('Bundle analyzer not available');
-      });
-    }
-  }, []);
-
-  return null;
-}
+// Bundle analyzer (server-side only - should not be used in client components)

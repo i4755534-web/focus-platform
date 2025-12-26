@@ -1,4 +1,9 @@
 import type { NextConfig } from "next";
+import withBundleAnalyzer from '@next/bundle-analyzer';
+
+const bundleAnalyzer = withBundleAnalyzer({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 const nextConfig: NextConfig = {
   output: process.env.EXPORT_STATIC ? 'export' : 'standalone',
@@ -7,6 +12,7 @@ const nextConfig: NextConfig = {
     unoptimized: process.env.EXPORT_STATIC ? true : false,
   },
   devIndicators: false,
+  turbopack: {},
   webpack: (config, { isServer }) => {
     // Aggressively exclude all test files and dependencies that cause issues
     config.module.rules.push({
@@ -71,4 +77,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default bundleAnalyzer(nextConfig);

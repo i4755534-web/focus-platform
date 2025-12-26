@@ -6,12 +6,12 @@
     "dev": "next dev",
     "build": "next build --webpack",
     "build:static": "EXPORT_STATIC=true next build",
+    "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "eslint",
     "test": "jest",
     "test:ci": "jest --ci",
     "type-check": "tsc --noEmit",
-    "build:analyze": "npm run build",
     "test:e2e": "playwright test",
     "export": "next export"
   },
@@ -41,7 +41,7 @@
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "dompurify": "^3.3.0",
+    "dompurify": "^3.3.1",
     "emoji-picker-react": "^4.15.2",
     "ethers": "^6.15.0",
     "fuse.js": "^7.1.0",
@@ -67,6 +67,7 @@
     "zustand": "^5.0.8"
   },
   "devDependencies": {
+    "@next/bundle-analyzer": "^16.1.1",
     "@playwright/test": "^1.57.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",

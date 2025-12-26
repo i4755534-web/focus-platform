@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main, develop ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, develop ]
 
 jobs:
   test:
@@ -35,14 +35,11 @@ jobs:
 
     - name: Run unit tests
       run: npm run test -- --coverage --watchAll=false
-      env:
-        CI: true
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage/lcov.info
-        fail_ci_if_error: false
 
   e2e-test:
     runs-on: ubuntu-latest
@@ -55,19 +52,17 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: 20.x
         cache: 'npm'
 
     - name: Install dependencies
       run: npm ci
 
-    - name: Install Playwright browsers
+    - name: Install Playwright
       run: npx playwright install --with-deps
 
     - name: Run E2E tests
       run: npm run test:e2e
-      env:
-        CI: true
 
     - name: Upload test results
       uses: actions/upload-artifact@v3
@@ -77,9 +72,9 @@ jobs:
         path: playwright-report/
         retention-days: 30
 
-  build:
+  lighthouse:
     runs-on: ubuntu-latest
-    needs: [test, e2e-test]
+    needs: test
 
     steps:
     - name: Checkout code
@@ -88,7 +83,7 @@ jobs:
     - name: Setup Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '20.x'
+        node-version: 20.x
         cache: 'npm'
 
     - name: Install dependencies
@@ -96,6 +91,58 @@ jobs:
 
     - name: Build application
       run: npm run build
+
+    - name: Run Lighthouse
+      uses: treosh/lighthouse-ci-action@v10
+      with:
+        urls: http://localhost:3000
+        configPath: .lighthouserc.json
+        uploadArtifacts: true
+        temporaryPublicStorage: true
+
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [test, e2e-test, lighthouse]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Build application
+      run: npm run build
+
+    - name: Run bundle analyzer
+      run: npm run build:analyze
 
     - name: Upload build artifacts
       uses: actions/upload-artifact@v3
@@ -104,81 +151,28 @@ jobs:
         path: .next/
         retention-days: 30
 
-  lighthouse:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Build application
-      run: npm run build
-
-    - name: Run Lighthouse CI
-      run: npm install -g @lhci/cli && lhci autorun
-      env:
-        LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
-
   deploy-staging:
     runs-on: ubuntu-latest
-    needs: [build, lighthouse]
+    needs: build
     if: github.ref == 'refs/heads/develop'
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Build application
-      run: npm run build
-
     - name: Deploy to staging
-      run: |
-        echo "Deploying to staging environment..."
-        # Add your staging deployment commands here
-        # For example: rsync, docker push, etc.
+      run: echo "Deploying to staging environment"
+      # Add your staging deployment commands here
 
   deploy-production:
     runs-on: ubuntu-latest
-    needs: [build, lighthouse]
+    needs: build
     if: github.ref == 'refs/heads/main'
 
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
 
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20.x'
-        cache: 'npm'
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Build application
-      run: npm run build
-
     - name: Deploy to production
-      run: |
-        echo "Deploying to production environment..."
-        # Add your production deployment commands here
-        # For example: docker push to registry, kubectl apply, etc.
+      run: echo "Deploying to production environment"
+      # Add your production deployment commands here

@@ -72,58 +72,60 @@ export default function SettingsPage() {
     console.log('Saving settings:', settings);
   };
 
-  const updateSetting = (key: string, value: any) => {
+  const updateSetting = (key: string, value: string | number | boolean) => {
     setSettings(prev => ({ ...prev, [key]: value }));
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 xl:p-12 2xl:p-16 4xl:p-24 space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Настройки</h1>
-          <p className="text-gray-600">Управляйте своими настройками и конфиденциальностью</p>
+          <h1 className="text-2xl sm:text-3xl xl:text-4xl 2xl:text-5xl 4xl:text-6xl font-bold">Настройки</h1>
+          <p className="text-gray-600 text-sm sm:text-base xl:text-lg 2xl:text-xl 4xl:text-2xl">Управляйте своими настройками и конфиденциальностью</p>
         </div>
-        <Button onClick={handleSave} className="flex items-center gap-2">
-          <Save className="w-4 h-4" />
+        <Button onClick={handleSave} className="flex items-center gap-2 w-full sm:w-auto text-sm sm:text-base xl:text-lg 2xl:text-xl 4xl:text-2xl px-4 sm:px-6 xl:px-8 2xl:px-10 4xl:px-12 py-2 sm:py-3 xl:py-4 2xl:py-5 4xl:py-6">
+          <Save className="w-4 h-4 xl:w-5 xl:h-5 2xl:w-6 2xl:h-6 4xl:w-8 4xl:h-8" />
           Сохранить
         </Button>
       </div>
 
       <Tabs defaultValue="account" className="space-y-4">
-        <TabsList className="grid w-full grid-cols-8">
-          <TabsTrigger value="account" className="flex items-center gap-2">
-            <User className="w-4 h-4" />
-            Аккаунт
-          </TabsTrigger>
-          <TabsTrigger value="privacy" className="flex items-center gap-2">
-            <Shield className="w-4 h-4" />
-            Конфиденциальность
-          </TabsTrigger>
-          <TabsTrigger value="notifications" className="flex items-center gap-2">
-            <Bell className="w-4 h-4" />
-            Уведомления
-          </TabsTrigger>
-          <TabsTrigger value="chat" className="flex items-center gap-2">
-            <MessageSquare className="w-4 h-4" />
-            Чат
-          </TabsTrigger>
-          <TabsTrigger value="language" className="flex items-center gap-2">
-            <Globe className="w-4 h-4" />
-            Язык
-          </TabsTrigger>
-          <TabsTrigger value="theme" className="flex items-center gap-2">
-            <Palette className="w-4 h-4" />
-            Тема
-          </TabsTrigger>
-          <TabsTrigger value="devices" className="flex items-center gap-2">
-            <Smartphone className="w-4 h-4" />
-            Устройства
-          </TabsTrigger>
-          <TabsTrigger value="storage" className="flex items-center gap-2">
-            <Key className="w-4 h-4" />
-            Данные
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="inline-flex h-12 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground w-full min-w-max">
+            <TabsTrigger value="account" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2">
+              <User className="w-4 h-4" />
+              <span className="hidden sm:inline">Аккаунт</span>
+            </TabsTrigger>
+            <TabsTrigger value="privacy" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2">
+              <Shield className="w-4 h-4" />
+              <span className="hidden sm:inline">Конфиденциальность</span>
+            </TabsTrigger>
+            <TabsTrigger value="notifications" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2">
+              <Bell className="w-4 h-4" />
+              <span className="hidden sm:inline">Уведомления</span>
+            </TabsTrigger>
+            <TabsTrigger value="chat" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2">
+              <MessageSquare className="w-4 h-4" />
+              <span className="hidden sm:inline">Чат</span>
+            </TabsTrigger>
+            <TabsTrigger value="language" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2">
+              <Globe className="w-4 h-4" />
+              <span className="hidden sm:inline">Язык</span>
+            </TabsTrigger>
+            <TabsTrigger value="theme" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2">
+              <Palette className="w-4 h-4" />
+              <span className="hidden sm:inline">Тема</span>
+            </TabsTrigger>
+            <TabsTrigger value="devices" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2">
+              <Smartphone className="w-4 h-4" />
+              <span className="hidden sm:inline">Устройства</span>
+            </TabsTrigger>
+            <TabsTrigger value="storage" className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm gap-2">
+              <Key className="w-4 h-4" />
+              <span className="hidden sm:inline">Данные</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         {/* Аккаунт */}
         <TabsContent value="account" className="space-y-4">
@@ -190,14 +192,14 @@ export default function SettingsPage() {
               <CardDescription>Кто может видеть вашу информацию</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Последняя активность</h4>
                     <p className="text-sm text-gray-600">Кто видит, когда вы были в сети</p>
                   </div>
                   <Select value={settings.lastSeen} onValueChange={(value) => updateSetting('lastSeen', value)}>
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="w-full sm:w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -208,13 +210,13 @@ export default function SettingsPage() {
                   </Select>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Фото профиля</h4>
                     <p className="text-sm text-gray-600">Кто видит ваше фото профиля</p>
                   </div>
                   <Select value={settings.profilePhoto} onValueChange={(value) => updateSetting('profilePhoto', value)}>
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="w-full sm:w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -224,13 +226,13 @@ export default function SettingsPage() {
                   </Select>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Номер телефона</h4>
                     <p className="text-sm text-gray-600">Кто видит ваш номер телефона</p>
                   </div>
                   <Select value={settings.phoneNumber} onValueChange={(value) => updateSetting('phoneNumber', value)}>
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="w-full sm:w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -241,13 +243,13 @@ export default function SettingsPage() {
                   </Select>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Группы</h4>
                     <p className="text-sm text-gray-600">Кто может добавлять вас в группы</p>
                   </div>
                   <Select value={settings.groups} onValueChange={(value) => updateSetting('groups', value)}>
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="w-full sm:w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -257,13 +259,13 @@ export default function SettingsPage() {
                   </Select>
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Звонки</h4>
                     <p className="text-sm text-gray-600">Кто может вам звонить</p>
                   </div>
                   <Select value={settings.calls} onValueChange={(value) => updateSetting('calls', value)}>
-                    <SelectTrigger className="w-32">
+                    <SelectTrigger className="w-full sm:w-32">
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
@@ -285,9 +287,9 @@ export default function SettingsPage() {
               <CardDescription>Настройте уведомления для различных событий</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Сообщения</h4>
                     <p className="text-sm text-gray-600">Уведомления о новых сообщениях</p>
                   </div>
@@ -297,8 +299,8 @@ export default function SettingsPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Групповые чаты</h4>
                     <p className="text-sm text-gray-600">Уведомления из групповых чатов</p>
                   </div>
@@ -308,8 +310,8 @@ export default function SettingsPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Звонки</h4>
                     <p className="text-sm text-gray-600">Уведомления о входящих звонках</p>
                   </div>
@@ -319,8 +321,8 @@ export default function SettingsPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Звук</h4>
                     <p className="text-sm text-gray-600">Звуковые уведомления</p>
                   </div>
@@ -330,8 +332,8 @@ export default function SettingsPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Вибрация</h4>
                     <p className="text-sm text-gray-600">Вибрация при уведомлениях</p>
                   </div>
@@ -353,9 +355,9 @@ export default function SettingsPage() {
               <CardDescription>Настройте поведение чата</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div>
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Enter для отправки</h4>
                     <p className="text-sm text-gray-600">Отправлять сообщения по нажатию Enter</p>
                   </div>
@@ -365,8 +367,8 @@ export default function SettingsPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Показывать статус прочтения</h4>
                     <p className="text-sm text-gray-600">Показывать, прочитано ли сообщение</p>
                   </div>
@@ -376,9 +378,9 @@ export default function SettingsPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-medium">Показывать статус "печатает"</h4>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium">Показывать статус печатает</h4>
                     <p className="text-sm text-gray-600">Показывать, когда собеседник печатает</p>
                   </div>
                   <Switch
@@ -387,8 +389,8 @@ export default function SettingsPage() {
                   />
                 </div>
 
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex-1 min-w-0">
                     <h4 className="font-medium">Автоудаление сообщений</h4>
                     <p className="text-sm text-gray-600">Автоматически удалять старые сообщения</p>
                   </div>

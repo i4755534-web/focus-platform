@@ -5,6 +5,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { useNotifications } from '@/hooks/useNotifications';
 import { useEffect } from 'react';
 import WalletClient from '@/components/WalletClient';
+import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
+import OfflineFallback from '@/components/OfflineFallback';
+import { ResourceHints } from '@/components/performance/ImageOptimizer';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -40,14 +43,26 @@ export default function RootLayout({
   }, [connectSocket]);
 
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="ru" suppressHydrationWarning={true}>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#3b82f6" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="FOCUS" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning={true}
       >
-        <WalletClient>
-          {children}
-        </WalletClient>
+        <ResourceHints />
+        <OfflineFallback>
+          <WalletClient>
+            {children}
+            <PWAInstallPrompt />
+          </WalletClient>
+        </OfflineFallback>
       </body>
     </html>
   );

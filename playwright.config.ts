@@ -34,6 +34,14 @@ export default defineConfig({
     video: 'retain-on-failure',
   },
 
+  /* Visual regression testing */
+  expect: {
+    toHaveScreenshot: {
+      threshold: 0.2, // Allow 0.2% difference
+      maxDiffPixels: 100, // Maximum 100 different pixels
+    },
+  },
+
   /* Configure projects for major browsers */
   projects: [
     {
@@ -82,11 +90,6 @@ export default defineConfig({
 
   /* Global test timeout */
   timeout: 60 * 1000,
-
-  /* Expect timeout */
-  expect: {
-    timeout: 10 * 1000,
-  },
 
   /* Global setup */
   globalSetup: require.resolve('./e2e/global-setup'),
