@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
+import ThreeBackground from '@/components/ThreeBackground';
 
 interface Chat {
   id: string;
@@ -28,33 +29,36 @@ export default function ChatsPage() {
   );
 
   return (
-    <div>
-      <h2 className="text-2xl mb-4">Чаты</h2>
-      <div className="mb-4">
-        <Input
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Поиск чатов..."
-          className="w-full"
-        />
-      </div>
-      <ul>
-        {filteredChats.map((chat) => (
-          <li key={chat.id} className="p-4 border-b cursor-pointer hover:bg-gray-50">
-            <Link href={`/dashboard/chats/${chat.id}`}>
-              <div className="flex justify-between items-start">
-                <div className="flex items-center">
-                  <span className="font-medium mr-2">{chat.name}</span>
-                  {chat.type === 'group' && <span className="text-gray-400 text-sm">👥 {chat.participants.length}</span>}
+    <div className="relative min-h-screen">
+      <ThreeBackground />
+      <div className="relative z-10 p-6">
+        <h2 className="text-2xl mb-4 text-foreground">Чаты</h2>
+        <div className="mb-4">
+          <Input
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Поиск чатов..."
+            className="w-full"
+          />
+        </div>
+        <ul>
+          {filteredChats.map((chat) => (
+            <li key={chat.id} className="p-4 border-b border-border cursor-pointer hover:bg-muted/50 transition-colors">
+              <Link href={`/dashboard/chats/${chat.id}`}>
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center">
+                    <span className="font-medium mr-2 text-foreground">{chat.name}</span>
+                    {chat.type === 'group' && <span className="text-muted-foreground text-sm">👥 {chat.participants.length}</span>}
+                  </div>
+                  {chat.unreadCount > 0 && <span className="bg-destructive text-destructive-foreground rounded-full px-2 text-sm">{chat.unreadCount}</span>}
                 </div>
-                {chat.unreadCount > 0 && <span className="bg-red-500 text-white rounded-full px-2 text-sm">{chat.unreadCount}</span>}
-              </div>
-              <p className="text-gray-500 text-sm">{chat.lastMessage}</p>
-              {chat.type === 'group' && <p className="text-gray-400 text-xs">{chat.participants.join(', ')}</p>}
-            </Link>
-          </li>
-        ))}
-      </ul>
+                <p className="text-muted-foreground text-sm">{chat.lastMessage}</p>
+                {chat.type === 'group' && <p className="text-muted-foreground text-xs">{chat.participants.join(', ')}</p>}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }

@@ -30,15 +30,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const prompt = `Generate a unique avatar design for user "${username}" with mood "${mood}" in ${style} style.
+    const prompt = `Generate a unique 3D avatar description for user "${username}" with mood "${mood}" in ${style} style.
 
 Return a JSON object with the following properties:
+- avatarUrl: URL to a Ready Player Me avatar (use format: https://models.readyplayer.me/[avatar_id].glb)
 - primaryColor: hex color for main background
 - secondaryColor: hex color for secondary elements
 - accentColor: hex color for highlights
 - pattern: style pattern ("cyberpunk", "geometric", "organic", "minimal")
 - shape: avatar shape ("circle", "hexagon", "square", "blob")
 - effects: array of visual effects to apply
+- moodExpression: facial expression matching the mood
 
 Make it creative and fitting for a ${mood} mood. Use colors that evoke the right emotion.
 
@@ -85,12 +87,14 @@ Respond only with valid JSON, no additional text.`;
       username,
       mood,
       style,
+      avatarUrl: avatarDesign.avatarUrl || 'https://models.readyplayer.me/64d25c5c5c5c5c5c5c5c5c5c.glb', // Fallback URL
       primaryColor: avatarDesign.primaryColor || moodColors.primary,
       secondaryColor: avatarDesign.secondaryColor || moodColors.secondary,
       accentColor: avatarDesign.accentColor || moodColors.accent,
       pattern: avatarDesign.pattern || 'cyberpunk',
       shape: avatarDesign.shape || 'circle',
       effects: avatarDesign.effects || ['glow', 'particles'],
+      moodExpression: avatarDesign.moodExpression || 'neutral',
       generatedAt: new Date().toISOString()
     });
 
@@ -103,12 +107,14 @@ Respond only with valid JSON, no additional text.`;
       username: 'Unknown User',
       mood: 'creative',
       style: 'cyberpunk-watercolor',
-      primaryColor: '#FF00FF',
-      secondaryColor: '#00FFFF',
-      accentColor: '#FFFF00',
+      avatarUrl: 'https://models.readyplayer.me/64d25c5c5c5c5c5c5c5c5c5c.glb',
+      primaryColor: '#6c43ff',
+      secondaryColor: '#00f3ff',
+      accentColor: '#e8d7ff',
       pattern: 'cyberpunk',
       shape: 'circle',
       effects: ['glow'],
+      moodExpression: 'neutral',
       isFallback: true
     });
   }

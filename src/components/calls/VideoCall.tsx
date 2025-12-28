@@ -6,6 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useWebRTC, CallParticipant } from '@/hooks/useWebRTC';
 import { Mic, MicOff, Video, VideoOff, Phone, Monitor, MonitorOff } from 'lucide-react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 
 interface VideoCallProps {
   participants: string[];
@@ -168,28 +170,29 @@ export default function VideoCall({ participants, onEndCall }: VideoCallProps) {
           </motion.div>
         )}
 
-        {/* Participants grid */}
-        <motion.div
-          className="absolute bottom-24 left-4 right-4 grid grid-cols-2 md:grid-cols-4 gap-4"
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-        >
-          {callState.participants.map((participant, index) => (
-            <motion.div
-              key={participant.id}
-              initial={{ scale: 0, rotateY: -90 }}
-              animate={{ scale: 1, rotateY: 0 }}
-              transition={{
-                delay: 0.1 * index,
-                type: "spring",
-                stiffness: 200
-              }}
-            >
-              <ParticipantVideo participant={participant} />
-            </motion.div>
-          ))}
-        </motion.div>
+        {/* 3D Participants Spiral */}
+        <div className="absolute bottom-24 left-4 right-4 h-64">
+          <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
+            <ambientLight intensity={0.5} />
+            <pointLight position={[10, 10, 10]} />
+            {callState.participants.map((participant, index) => {
+              const angle = (index / callState.participants.length) * Math.PI * 2;
+              const radius = 2;
+              const x = Math.cos(angle) * radius;
+              const z = Math.sin(angle) * radius;
+              const y = (index % 2) * 0.5;
+              return (
+                <Participant3D
+                  key={participant.id}
+                  participant={participant}
+                  position={[x, y, z]}
+                  rotation={[0, -angle, 0]}
+                />
+              );
+            })}
+            <OrbitControls enableZoom={false} enablePan={false} autoRotate autoRotateSpeed={0.5} />
+          </Canvas>
+        </div>
       </div>
 
       {/* Controls */}
@@ -290,5 +293,32 @@ function ParticipantVideo({ participant }: ParticipantVideoProps) {
         )}
       </div>
     </Card>
+  );
+}
+
+interface Participant3DProps {
+  participant: CallParticipant;
+  position: [number, number, number];
+  rotation: [number, number, number];
+}
+
+function Participant3D({ participant, position, rotation }: Participant3DProps) {
+  return (
+    <group position={position} rotation={rotation}>
+      <mesh>
+        <planeGeometry args={[1.5, 1]} />
+        <meshBasicMaterial color="#000" />
+      </mesh>
+      <mesh position={[0, 0, 0.01]}>
+        <planeGeometry args={[1.4, 0.9]} />
+        <meshBasicMaterial color="#333" />
+        {/* Here you would map the video texture, but for simplicity, just placeholder */}
+      </mesh>
+      <mesh position={[0, -0.6, 0]}>
+        <planeGeometry args={[1.4, 0.2]} />
+        <meshBasicMaterial color="#111" />
+        {/* Participant name would go here */}
+      </mesh>
+    </group>
   );
 }

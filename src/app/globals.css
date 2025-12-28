@@ -44,50 +44,50 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.5 0.3 300);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.6 0.25 320);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.95 0.02 300);
-  --muted-foreground: oklch(0.5 0.1 300);
-  --accent: oklch(0.92 0.03 320);
-  --accent-foreground: oklch(0.3 0.15 320);
+  --background: oklch(0.08 0.1 270); /* #0f0a1a - Deep Cyberpunk Background */
+  --foreground: oklch(0.85 0.3 300); /* #e8d7ff - Light Lavender Text */
+  --card: oklch(0.12 0.15 270);
+  --card-foreground: oklch(0.85 0.3 300);
+  --popover: oklch(0.12 0.15 270);
+  --popover-foreground: oklch(0.85 0.3 300);
+  --primary: oklch(0.55 0.9 270); /* #6c43ff - Neon Lavender */
+  --primary-foreground: oklch(0.95 0 0);
+  --secondary: oklch(0.8 0.9 180); /* #00f3ff - Cyan Neon */
+  --secondary-foreground: oklch(0.95 0 0);
+  --muted: oklch(0.2 0.2 270);
+  --muted-foreground: oklch(0.7 0.3 300);
+  --accent: oklch(0.6 0.8 180);
+  --accent-foreground: oklch(0.95 0 0);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.25 0.3 270);
+  --input: oklch(0.15 0.2 270);
+  --ring: oklch(0.55 0.9 270);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
   --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --sidebar: oklch(0.1 0.12 270);
+  --sidebar-foreground: oklch(0.85 0.3 300);
+  --sidebar-primary: oklch(0.55 0.9 270);
+  --sidebar-primary-foreground: oklch(0.95 0 0);
+  --sidebar-accent: oklch(0.15 0.2 270);
+  --sidebar-accent-foreground: oklch(0.85 0.3 300);
+  --sidebar-border: oklch(0.25 0.3 270);
+  --sidebar-ring: oklch(0.55 0.9 270);
 
-  /* NEBULA Design System Variables */
-  --neon-primary: 0.7 0.8 300; /* Electric Fuchsia #FF00FF */
-  --neon-secondary: 0.8 0.9 180; /* Electric Cyan #00FFFF */
-  --neon-accent: 0.6 0.7 60; /* Electric Lime */
-  --liquid-primary: 0.5 0.4 300; /* Deep Magenta */
-  --liquid-secondary: 0.4 0.3 240; /* Deep Blue */
+  /* CYBERPUNK TOKYO 2077 Design System Variables */
+  --neon-primary: 0.55 0.9 270; /* #6c43ff - Neon Lavender */
+  --neon-secondary: 0.8 0.9 180; /* #00f3ff - Cyan Neon */
+  --neon-accent: 0.85 0.3 300; /* #e8d7ff - Light Lavender Text */
+  --liquid-primary: 0.4 0.8 270; /* Deep Neon Lavender */
+  --liquid-secondary: 0.3 0.9 180; /* Deep Cyan */
   --liquid-accent: 0.6 0.5 180; /* Bright Cyan */
-  --holo-1: 0.8 0.6 300; /* Holographic Magenta */
-  --holo-2: 0.7 0.7 180; /* Holographic Cyan */
+  --holo-1: 0.6 0.8 270; /* Holographic Lavender */
+  --holo-2: 0.7 0.9 180; /* Holographic Cyan */
   --holo-3: 0.9 0.4 60; /* Holographic Lime */
-  --shadow: 0 0 0 / 0.5;
-  --glow-strength: 0.6;
+  --shadow: 0 0 0 / 0.7;
+  --glow-strength: 0.8;
 
   /* Mood-Based Gradients */
   --mood-dawn: linear-gradient(135deg, oklch(0.9 0.1 45), oklch(0.8 0.2 60), oklch(0.7 0.3 90));

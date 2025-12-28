@@ -2,6 +2,13 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, useGLTF } from '@react-three/drei';
+
+function AvatarModel({ url }: { url: string }) {
+  const { scene } = useGLTF(url);
+  return <primitive object={scene} scale={0.5} />;
+}
 
 interface AIAvatarProps {
   userId: string;
@@ -12,6 +19,17 @@ interface AIAvatarProps {
   mood?: 'happy' | 'serious' | 'creative' | 'energetic' | 'calm';
 }
 
+interface AvatarData {
+  avatarUrl?: string;
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  pattern: string;
+  shape: string;
+  effects: string[];
+  moodExpression: string;
+}
+
 export default function AIAvatar({
   userId,
   username,
@@ -20,7 +38,7 @@ export default function AIAvatar({
   status = 'offline',
   mood = 'calm'
 }: AIAvatarProps) {
-  const [avatarData, setAvatarData] = useState<any>(null);
+  const [avatarData, setAvatarData] = useState<AvatarData | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -73,10 +91,14 @@ export default function AIAvatar({
       console.error('Failed to generate avatar:', error);
       // Fallback to default
       setAvatarData({
-        primaryColor: '#FF00FF',
-        secondaryColor: '#00FFFF',
-        pattern: 'default',
-        shape: 'circle'
+        avatarUrl: undefined,
+        primaryColor: '#6c43ff',
+        secondaryColor: '#00f3ff',
+        accentColor: '#e8d7ff',
+        pattern: 'cyberpunk',
+        shape: 'circle',
+        effects: ['glow'],
+        moodExpression: 'neutral'
       });
     } finally {
       setIsGenerating(false);
@@ -162,7 +184,17 @@ export default function AIAvatar({
         whileTap={{ scale: 0.95 }}
         transition={{ duration: 0.3 }}
       >
-        {avatarData ? (
+        {avatarData?.avatarUrl ? (
+          <Canvas
+            camera={{ position: [0, 0, 2], fov: 50 }}
+            style={{ width: '100%', height: '100%' }}
+          >
+            <ambientLight intensity={0.5} />
+            <pointLight position={[10, 10, 10]} />
+            <AvatarModel url={avatarData.avatarUrl} />
+            <OrbitControls enableZoom={false} enablePan={false} />
+          </Canvas>
+        ) : avatarData ? (
           <canvas
             ref={canvasRef}
             width={size === 'sm' ? 32 : size === 'md' ? 48 : size === 'lg' ? 64 : 96}

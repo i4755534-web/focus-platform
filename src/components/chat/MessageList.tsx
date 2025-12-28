@@ -7,12 +7,34 @@ import { useAuth } from '@/hooks/useAuth';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useSwipe } from '@/hooks/useSwipe';
 import { Button } from '@/components/ui/button';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, useGLTF } from '@react-three/drei';
+
+function Book3D() {
+  return (
+    <Canvas style={{ width: '100px', height: '100px' }}>
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} />
+      <mesh rotation={[0, 0, 0]}>
+        <boxGeometry args={[1, 1.5, 0.2]} />
+        <meshStandardMaterial color="#8B4513" />
+      </mesh>
+      <mesh position={[0, 0, 0.11]}>
+        <boxGeometry args={[0.9, 1.4, 0.01]} />
+        <meshStandardMaterial color="#FFF8DC" />
+      </mesh>
+    </Canvas>
+  );
+}
 
 interface Message {
   id: string;
   text: string;
   sender: 'me' | 'other';
   timestamp: string;
+  type?: 'text' | 'voice' | 'file';
+  fileUrl?: string;
+  fileType?: string;
   reactions?: Array<{ emoji: string; userId: string }>;
   replyTo?: { id: string; text: string; sender: string };
 }
@@ -121,10 +143,67 @@ const MessageList = memo(function MessageList({ messages = [], chatId, onPinMess
                 Reply to: {msg.replyTo.text}
               </div>
             )}
-            {msg.text}
+            {msg.type === 'text' && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                {msg.text.split('').map((char, index) => (
+                  <motion.span
+                    key={index}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </motion.div>
+            )}
+            {msg.type === 'voice' && (
+              <div className="flex items-center gap-2">
+                <div className="flex gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="w-1 bg-primary rounded-full"
+                      animate={{
+                        height: [10, 30, 10],
+                        backgroundColor: ['#6c43ff', '#00f3ff', '#6c43ff']
+                      }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        delay: i * 0.1
+                      }}
+                    />
+                  ))}
+                </div>
+                <span className="text-sm opacity-70">Voice message</span>
+              </div>
+            )}
+            {msg.type === 'file' && msg.fileType === 'pdf' && (
+              <div className="flex items-center gap-2">
+                <Book3D />
+                <span>PDF Document</span>
+              </div>
+            )}
+            {msg.type === 'file' && msg.fileType === 'image' && msg.fileUrl && (
+              <motion.img
+                src={msg.fileUrl}
+                alt="Shared image"
+                className="max-w-xs rounded-lg"
+                initial={{ rotateY: 0 }}
+                whileHover={{ rotateY: 180 }}
+                transition={{ duration: 0.6 }}
+                style={{ transformStyle: 'preserve-3d' }}
+              />
+            )}
+            {msg.type !== 'text' && msg.type !== 'voice' && msg.type !== 'file' && msg.text}
             {msg.text.match(/https?:\/\/[^\s]+/) && (
-              <div className="mt-2 p-2 bg-gray-100 rounded">
-                <a href={msg.text.match(/https?:\/\/[^\s]+/)![0]} target="_blank" rel="noopener noreferrer" className="text-blue-500">
+              <div className="mt-2 p-2 bg-muted rounded">
+                <a href={msg.text.match(/https?:\/\/[^\s]+/)![0]} target="_blank" rel="noopener noreferrer" className="text-primary">
                   🔗 {msg.text.match(/https?:\/\/[^\s]+/)![0]}
                 </a>
               </div>
