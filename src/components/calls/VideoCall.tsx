@@ -1,6 +1,7 @@
 'use client';
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo, useState } from 'react';
+import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { useWebRTC, CallParticipant } from '@/hooks/useWebRTC';
@@ -24,6 +25,7 @@ export default function VideoCall({ participants, onEndCall }: VideoCallProps) {
 
   const localVideoRef = useRef<HTMLVideoElement>(null);
   const screenVideoRef = useRef<HTMLVideoElement>(null);
+  const [activeParticipantId, setActiveParticipantId] = useState<string | null>(null);
 
   // Initialize call
   useEffect(() => {
@@ -64,52 +66,139 @@ export default function VideoCall({ participants, onEndCall }: VideoCallProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black z-50 flex flex-col">
+    <motion.div
+      className="fixed inset-0 bg-black z-50 flex flex-col"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
       {/* Main video area */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative overflow-hidden">
         {callState.isScreenSharing && callState.screenStream ? (
-          <video
+          <motion.video
             ref={screenVideoRef}
             autoPlay
             muted
             className="w-full h-full object-contain"
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
           />
         ) : (
-          <div className="w-full h-full bg-gray-900 flex items-center justify-center">
-            <div className="text-white text-center">
-              <div className="w-32 h-32 bg-gray-700 rounded-full mx-auto mb-4 flex items-center justify-center">
+          <motion.div
+            className="w-full h-full bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center relative"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8 }}
+          >
+            {/* Animated background particles */}
+            <div className="absolute inset-0">
+              {[...Array(20)].map((_, i) => (
+                <motion.div
+                  key={i}
+                  className="absolute w-2 h-2 bg-white rounded-full opacity-20"
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                  }}
+                  animate={{
+                    y: [0, -20, 0],
+                    opacity: [0.2, 0.8, 0.2],
+                  }}
+                  transition={{
+                    duration: 3 + Math.random() * 2,
+                    repeat: Infinity,
+                    delay: Math.random() * 2,
+                  }}
+                />
+              ))}
+            </div>
+
+            <motion.div
+              className="text-white text-center z-10"
+              initial={{ scale: 0.8, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.5 }}
+            >
+              <motion.div
+                className="w-32 h-32 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full mx-auto mb-4 flex items-center justify-center shadow-2xl"
+                animate={{
+                  boxShadow: [
+                    '0 0 20px rgba(168, 85, 247, 0.5)',
+                    '0 0 40px rgba(59, 130, 246, 0.8)',
+                    '0 0 20px rgba(168, 85, 247, 0.5)'
+                  ]
+                }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
                 <Video className="w-16 h-16" />
-              </div>
-              <p className="text-xl">Видеозвонок</p>
-              <p className="text-gray-400">
+              </motion.div>
+              <motion.p
+                className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent"
+                animate={{ opacity: [0.7, 1, 0.7] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                Видеозвонок
+              </motion.p>
+              <p className="text-gray-300">
                 {callState.participants.length} участник{callState.participants.length !== 1 ? 'ов' : ''}
               </p>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         )}
 
         {/* Local video (picture-in-picture) */}
         {callState.localStream && !callState.isVideoOff && (
-          <div className="absolute top-4 right-4 w-48 h-36 bg-black rounded-lg overflow-hidden border-2 border-white">
+          <motion.div
+            className="absolute top-4 right-4 w-48 h-36 bg-black/80 backdrop-blur-md rounded-lg overflow-hidden border-2 border-purple-400 shadow-2xl"
+            initial={{ scale: 0, rotate: -10 }}
+            animate={{ scale: 1, rotate: 0 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            whileHover={{ scale: 1.05 }}
+            style={{
+              boxShadow: '0 10px 30px rgba(168, 85, 247, 0.3)',
+            }}
+          >
             <video
               ref={localVideoRef}
               autoPlay
               muted
               className="w-full h-full object-cover"
             />
-          </div>
+          </motion.div>
         )}
 
         {/* Participants grid */}
-        <div className="absolute bottom-24 left-4 right-4 grid grid-cols-2 md:grid-cols-4 gap-2">
-          {callState.participants.map((participant) => (
-            <ParticipantVideo key={participant.id} participant={participant} />
+        <motion.div
+          className="absolute bottom-24 left-4 right-4 grid grid-cols-2 md:grid-cols-4 gap-4"
+          initial={{ y: 100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          {callState.participants.map((participant, index) => (
+            <motion.div
+              key={participant.id}
+              initial={{ scale: 0, rotateY: -90 }}
+              animate={{ scale: 1, rotateY: 0 }}
+              transition={{
+                delay: 0.1 * index,
+                type: "spring",
+                stiffness: 200
+              }}
+            >
+              <ParticipantVideo participant={participant} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       {/* Controls */}
-      <div className="bg-gray-900 p-4 flex justify-center items-center space-x-4">
+      <motion.div
+        className="bg-black/80 backdrop-blur-lg p-4 flex justify-center items-center space-x-4 border-t border-purple-500/20"
+        initial={{ y: 100 }}
+        animate={{ y: 0 }}
+        transition={{ delay: 0.7, duration: 0.5 }}
+      >
         <Button
           variant={callState.isMuted ? "destructive" : "secondary"}
           size="lg"
@@ -145,8 +234,8 @@ export default function VideoCall({ participants, onEndCall }: VideoCallProps) {
         >
           <Phone className="w-6 h-6" />
         </Button>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
 

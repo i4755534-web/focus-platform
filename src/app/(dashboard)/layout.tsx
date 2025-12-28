@@ -1,6 +1,8 @@
 'use client';
 
 import { useAuth } from '@/hooks/useAuth';
+import { useAdaptiveColors } from '@/hooks/useAdaptiveColors';
+import { useCyberpunkMode } from '@/hooks/useCyberpunkMode';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
@@ -11,6 +13,7 @@ import AIChatBot from '@/components/ai/AIChatBot';
 import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
 import { ErrorBoundary } from '@/components/error/ErrorBoundary';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import MoodBackground from '@/components/MoodBackground';
 
 export default function DashboardLayout({
   children,
@@ -18,6 +21,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   const { isAuthenticated } = useAuth();
+  const { currentScheme } = useAdaptiveColors();
+  const { handleLogoClick } = useCyberpunkMode();
   const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -32,7 +37,7 @@ export default function DashboardLayout({
   }
 
   return (
-    <>
+    <MoodBackground>
       {/* Skip Links for Accessibility */}
       <a
         href="#main-content"
@@ -50,29 +55,30 @@ export default function DashboardLayout({
       </a>
 
       <div className="flex h-screen">
-      {/* Desktop Sidebar */}
-      <Sidebar />
+        <div className="cyberpunk-grid-2026"></div>
+        {/* Desktop Sidebar */}
+        <Sidebar />
 
-      {/* Mobile Sidebar */}
-      <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-        <SheetContent side="left" className="p-0 w-64">
-          <Sidebar mobile />
-        </SheetContent>
-      </Sheet>
+        {/* Mobile Sidebar */}
+        <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+          <SheetContent side="left" className="p-0 w-64">
+            <Sidebar mobile />
+          </SheetContent>
+        </Sheet>
 
-      <div className="flex-1 flex flex-col">
-        <Topbar onMenuClick={() => setSidebarOpen(true)} />
-        <main id="main-content" className="flex-1 p-4 overflow-auto pb-16 md:pb-4" role="main" aria-label="Основное содержимое">
-          <ErrorBoundary>
-            {children}
-          </ErrorBoundary>
-        </main>
-        <MobileNav />
-        <AIAssistant />
-        <AIChatBot />
-        <PWAInstallPrompt />
+        <div className="flex-1 flex flex-col">
+          <Topbar onMenuClick={() => setSidebarOpen(true)} onLogoClick={handleLogoClick} />
+          <main id="main-content" className="flex-1 p-4 overflow-auto pb-16 md:pb-4" role="main" aria-label="Основное содержимое">
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
+          </main>
+          <MobileNav />
+          <AIAssistant />
+          <AIChatBot />
+          <PWAInstallPrompt />
+        </div>
       </div>
-    </div>
-    </>
+    </MoodBackground>
   );
 }

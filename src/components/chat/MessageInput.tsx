@@ -79,7 +79,7 @@ export default function MessageInput({ onSendMessage, onTyping, replyTo, onCance
         </div>
       )}
       <form onSubmit={handleSubmit} className="p-4 flex">
-        <Input value={text} onChange={handleChange} placeholder="Введите сообщение..." className="flex-1 mr-2" />
+        <Input value={text} onChange={handleChange} placeholder="Введите сообщение..." className="flex-1 mr-2" data-testid="message-input" />
         <Button type="button" onClick={() => setShowPicker(!showPicker)} className="mr-2">😀</Button>
         <Button
           type="button"
@@ -89,7 +89,7 @@ export default function MessageInput({ onSendMessage, onTyping, replyTo, onCance
         >
           {isListening ? '⏹️' : '🎤'}
         </Button>
-        <Button type="submit">Отправить</Button>
+        <Button type="submit" className="liquid-button-2026">Отправить</Button>
       </form>
       {showPicker && (
         <div className="absolute bottom-full right-0 mb-2">

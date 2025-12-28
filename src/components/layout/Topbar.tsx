@@ -15,9 +15,10 @@ import AccessibilityPanel from '@/components/accessibility/AccessibilityPanel';
 
 interface TopbarProps {
   onMenuClick?: () => void;
+  onLogoClick?: () => void;
 }
 
-export default function Topbar({ onMenuClick }: TopbarProps) {
+export default function Topbar({ onMenuClick, onLogoClick }: TopbarProps) {
   const { user, logout } = useAuth();
   const { setTheme } = useTheme();
   const { language, setLanguage, t } = useTranslation();
@@ -87,7 +88,13 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <h1 className="text-xl font-semibold hidden sm:block">FOCUS</h1>
+        <h1
+          className="text-xl font-semibold hidden sm:block cursor-pointer select-none"
+          onClick={onLogoClick}
+          title="Triple-click for cyberpunk mode"
+        >
+          FOCUS
+        </h1>
       </div>
       <div className="flex-1 max-w-md mx-4 hidden md:block">
         <Input

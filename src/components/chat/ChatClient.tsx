@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback, useMemo, memo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useMessages } from '@/hooks/useMessages';
 import { useTyping } from '@/hooks/useTyping';
+import { useMoodAnalysis } from '@/hooks/useMoodAnalysis';
 import ChatHeader from '@/components/chat/ChatHeader';
 import MessageList from '@/components/chat/MessageList';
 import MessageInput from '@/components/chat/MessageInput';
@@ -23,6 +24,7 @@ const ChatClient = memo(function ChatClient({ chatId }: ChatClientProps) {
   const { user } = useAuth();
   const { messages, fetchMessages, sendMessage, pinMessage, pinnedMessages } = useMessages();
   const { typing, setTyping } = useTyping();
+  const { currentMood, theme, analyzeChatMood } = useMoodAnalysis(chatId);
   const [replyTo, setReplyTo] = useState<{ id: string; text: string; sender: string } | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -92,6 +94,14 @@ const ChatClient = memo(function ChatClient({ chatId }: ChatClientProps) {
   const chatPinned = useMemo(() => pinnedMessages[chatId] || [], [pinnedMessages, chatId]);
   const typingUsers = useMemo(() => typing[chatId] || [], [typing, chatId]);
 
+  // Анализ настроения чата при изменении сообщений
+  useEffect(() => {
+    if (chatMessages.length > 0) {
+      const messageTexts = chatMessages.map(msg => msg.text);
+      analyzeChatMood(messageTexts);
+    }
+  }, [chatMessages, analyzeChatMood]);
+
   if (!chatId) {
     return <div className="flex items-center justify-center h-full text-red-500">Ошибка: ID чата не указан</div>;
   }
@@ -131,7 +141,7 @@ const ChatClient = memo(function ChatClient({ chatId }: ChatClientProps) {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full" style={{ background: theme.background }} data-testid="chat-container">
       <ChatHeader name={chat.name} participants={chat.participants} typingUsers={typingUsers} />
 
       {chatPinned.length > 0 && (
