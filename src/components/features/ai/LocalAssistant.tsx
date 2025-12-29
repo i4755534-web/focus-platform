@@ -7,6 +7,7 @@ export default function LocalAssistant() {
   const [messages, setMessages] = useState<{ role: 'user' | 'assistant'; content: string }[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [ollamaAvailable, setOllamaAvailable] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Проверка доступности Ollama при загрузке
@@ -21,6 +22,14 @@ export default function LocalAssistant() {
       }
     };
     checkOllama();
+  }, []);
+
+  // Определение мобильного устройства
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const handleSend = async () => {
@@ -98,7 +107,7 @@ export default function LocalAssistant() {
 
   if (!ollamaAvailable) {
     return (
-      <div className="fixed bottom-4 right-4 w-[350px] glass-card border border-amber-500/30 rounded-3xl p-4">
+      <div className={`fixed bottom-4 ${isMobile ? 'left-2 right-2' : 'right-4'} ${isMobile ? 'w-auto' : 'w-[350px]'} glass-card border border-amber-500/30 rounded-3xl p-4`}>
         <div className="text-amber-400 text-center">
           <p className="mb-2">⚠️ Ollama не запущен</p>
           <p className="text-sm">Запусти Ollama в терминале командой:</p>
@@ -109,7 +118,7 @@ export default function LocalAssistant() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 w-[350px] h-[500px] glass-card border border-purple-500/30 rounded-3xl overflow-hidden shadow-2xl">
+    <div className={`fixed bottom-4 ${isMobile ? 'left-2 right-2' : 'right-4'} ${isMobile ? 'w-auto' : 'w-[350px]'} h-[500px] glass-card border border-purple-500/30 rounded-3xl overflow-hidden shadow-2xl`}>
       {/* Шапка с названием */}
       <div className="bg-gradient-to-r from-[#6c43ff] to-[#00f3ff] p-4 text-center relative overflow-hidden">
         <div className="absolute inset-0 animate-pulse opacity-20" style={{

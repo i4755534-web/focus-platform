@@ -914,4 +914,22 @@
   .emotion-badge.calm { background: var(--calm-blue); }
   .emotion-badge.energetic { background: var(--energetic-pink); }
   .emotion-badge.focused { background: var(--focused-green); }
+
+  /* Exam Survival Mode */
+  .exam-survival-mode .glass-card {
+    border: 2px solid #ff00ff !important;
+    animation: rainbow-border 2s infinite linear;
+  }
+
+  .exam-survival-mode .math-formula::before {
+    content: "🎮 ";
+  }
+
+  @keyframes rainbow-border {
+    0% { box-shadow: 0 0 15px #ff00ff; }
+    25% { box-shadow: 0 0 15px #00ffff; }
+    50% { box-shadow: 0 0 15px #ffff00; }
+    75% { box-shadow: 0 0 15px #00ff00; }
+    100% { box-shadow: 0 0 15px #ff00ff; }
+  }
 }

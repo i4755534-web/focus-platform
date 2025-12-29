@@ -8,6 +8,7 @@ import WalletClient from '@/components/WalletClient';
 import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
 import OfflineFallback from '@/components/OfflineFallback';
 import { ResourceHints } from '@/components/performance/ImageOptimizer';
+import toast from 'react-hot-toast';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -50,8 +51,42 @@ export default function RootLayout({
       }
     };
 
+    // Konami-код для режима выживания перед экзаменом
+    const konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+    let index = 0;
+
+    const handleKonami = (e: KeyboardEvent) => {
+      if (e.key === konamiCode[index]) {
+        index++;
+        if (index === konamiCode.length) {
+          document.documentElement.classList.add('exam-survival-mode');
+          localStorage.setItem('examMode', 'true');
+
+          // Воспроизводим звук 8-bit
+          const audio = new Audio('/sounds/8bit-achievement.mp3');
+          audio.volume = 0.3;
+          audio.play().catch(e => console.log('Audio error:', e));
+
+          // Показываем секретное сообщение
+          toast.success('🚀 РЕЖИМ ВЫЖИВАНИЯ АКТИВИРОВАН\nВсе формулы теперь объясняются через мемы и примеры из игр. Удачи на экзамене!', {
+            duration: 5000,
+            style: {
+              background: '#ff00ff',
+              color: '#fff',
+            },
+          });
+        }
+      } else {
+        index = 0;
+      }
+    };
+
     window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', handleKonami);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keydown', handleKonami);
+    };
   }, [connectSocket]);
 
   return (
