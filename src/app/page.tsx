@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/hooks/useAuth';
 import { motion } from 'framer-motion';
 import ParticleBackground from '@/components/ParticleBackground';
+import ThreeBackground from '@/components/ThreeBackground';
 
 export default function Home() {
   const { isAuthenticated } = useAuth();
@@ -35,6 +36,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center relative overflow-hidden">
       <ParticleBackground />
+      <ThreeBackground />
 
       <motion.div
         initial={{ opacity: 0, y: 50 }}
@@ -68,7 +70,7 @@ export default function Home() {
         >
           <motion.button
             onClick={handleLogin}
-            className="px-8 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/80 transition-colors"
+            className="liquid-button-2026"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
@@ -77,7 +79,7 @@ export default function Home() {
 
           <motion.button
             onClick={handleRegister}
-            className="px-8 py-3 bg-secondary text-secondary-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors"
+            className="liquid-button-2026"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >

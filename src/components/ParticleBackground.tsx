@@ -10,31 +10,47 @@ interface Particle {
   size: number;
   color: string;
   duration: number;
+  letter?: string;
+  originalX: number;
+  originalY: number;
 }
 
+// Function to generate particles forming "FOCUS"
+const generateFocusParticles = (): Particle[] => {
+  const letters = ['F', 'O', 'C', 'U', 'S'];
+  const particles: Particle[] = [];
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  const spacing = 100;
+
+  letters.forEach((letter, index) => {
+    const baseX = centerX - (letters.length - 1) * spacing / 2 + index * spacing;
+    const baseY = centerY - 50;
+
+    // Create multiple particles per letter
+    for (let i = 0; i < 10; i++) {
+      particles.push({
+        id: index * 10 + i,
+        x: baseX + (Math.random() - 0.5) * 80,
+        y: baseY + (Math.random() - 0.5) * 80,
+        originalX: baseX + (Math.random() - 0.5) * 80,
+        originalY: baseY + (Math.random() - 0.5) * 80,
+        size: Math.random() * 3 + 1,
+        color: Math.random() > 0.5 ? '#6c43ff' : '#00f3ff',
+        duration: 2 + Math.random() * 2,
+        letter,
+      });
+    }
+  });
+
+  return particles;
+};
+
 export default function ParticleBackground() {
-  const [particles, setParticles] = useState<Particle[]>([]);
+  const [particles] = useState<Particle[]>(() => generateFocusParticles());
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
-    // Generate particles
-    const generateParticles = () => {
-      const newParticles: Particle[] = [];
-      for (let i = 0; i < 50; i++) {
-        newParticles.push({
-          id: i,
-          x: Math.random() * window.innerWidth,
-          y: Math.random() * window.innerHeight,
-          size: Math.random() * 4 + 2,
-          color: Math.random() > 0.5 ? '#6c43ff' : '#00f3ff',
-          duration: 2 + Math.random() * 2,
-        });
-      }
-      setParticles(newParticles);
-    };
-
-    generateParticles();
-
     // Mouse move handler
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -51,32 +67,36 @@ export default function ParticleBackground() {
     <div className="fixed inset-0 overflow-hidden pointer-events-none">
       {particles.map((particle) => {
         const distance = Math.sqrt(
-          Math.pow(mousePosition.x - particle.x, 2) +
-          Math.pow(mousePosition.y - particle.y, 2)
+          Math.pow(mousePosition.x - particle.originalX, 2) +
+          Math.pow(mousePosition.y - particle.originalY, 2)
         );
 
-        const attraction = Math.max(0, 200 - distance) / 200;
-        const newX = particle.x + (mousePosition.x - particle.x) * attraction * 0.02;
-        const newY = particle.y + (mousePosition.y - particle.y) * attraction * 0.02;
+        const repulsion = Math.max(0, 150 - distance) / 150;
+        const scatterX = (particle.originalX - mousePosition.x) * repulsion * 2;
+        const scatterY = (particle.originalY - mousePosition.y) * repulsion * 2;
+
+        const newX = particle.originalX + scatterX;
+        const newY = particle.originalY + scatterY;
 
         return (
           <motion.div
             key={particle.id}
-            className="absolute rounded-full"
+            className="absolute flex items-center justify-center text-white font-bold"
             style={{
-              width: particle.size,
-              height: particle.size,
-              backgroundColor: particle.color,
-              boxShadow: `0 0 ${particle.size * 2}px ${particle.color}`,
+              width: particle.size * 10,
+              height: particle.size * 10,
+              fontSize: particle.size * 5,
+              color: particle.color,
+              textShadow: `0 0 ${particle.size * 2}px ${particle.color}`,
             }}
             animate={{
               x: newX,
               y: newY,
-              scale: [1, 1.2, 1],
+              scale: [1, 1.5, 1],
             }}
             transition={{
-              x: { type: 'spring', stiffness: 100, damping: 20 },
-              y: { type: 'spring', stiffness: 100, damping: 20 },
+              x: { type: 'spring', stiffness: 200, damping: 25 },
+              y: { type: 'spring', stiffness: 200, damping: 25 },
               scale: {
                 duration: particle.duration,
                 repeat: Infinity,
@@ -84,10 +104,12 @@ export default function ParticleBackground() {
               },
             }}
             initial={{
-              x: particle.x,
-              y: particle.y,
+              x: particle.originalX,
+              y: particle.originalY,
             }}
-          />
+          >
+            {particle.letter}
+          </motion.div>
         );
       })}
     </div>
