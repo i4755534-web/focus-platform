@@ -6,6 +6,7 @@ import { useMessages } from '@/hooks/useMessages';
 import { useAuth } from '@/hooks/useAuth';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useSwipe } from '@/hooks/useSwipe';
+import { useMoodDetection } from '@/hooks/useMoodDetection';
 import { Button } from '@/components/ui/button';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
@@ -50,6 +51,7 @@ const MessageList = memo(function MessageList({ messages = [], chatId, onPinMess
   const { addReaction } = useMessages();
   const { user } = useAuth();
   const { addFavorite, isFavorite } = useFavorites();
+  const interfaceMood = useMoodDetection(user?.id || '');
   const [hoveredMessage, setHoveredMessage] = useState<string | null>(null);
 
   const handleReaction = useCallback((messageId: string, emoji: string) => {
@@ -208,6 +210,13 @@ const MessageList = memo(function MessageList({ messages = [], chatId, onPinMess
                 </a>
               </div>
             )}
+
+            {/* Эмоциональная реакция в реальном времени */}
+            <div className="mt-2 flex space-x-1">
+              {interfaceMood === 'calm' && <div className="emotion-badge calm">😌</div>}
+              {interfaceMood === 'energetic' && <div className="emotion-badge energetic">⚡</div>}
+              {interfaceMood === 'focused' && <div className="emotion-badge focused">🎯</div>}
+            </div>
             {hoveredMessage === msg.id && (
               <div className="absolute top-0 right-0 transform translate-x-full ml-2 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col">
                 <div>

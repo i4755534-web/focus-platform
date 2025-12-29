@@ -3,7 +3,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { useNotifications } from '@/hooks/useNotifications';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import WalletClient from '@/components/WalletClient';
 import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
 import OfflineFallback from '@/components/OfflineFallback';
@@ -26,6 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   const { connectSocket } = useNotifications();
+  const [isRetroMode, setIsRetroMode] = useState(false);
 
   useEffect(() => {
     if ('serviceWorker' in navigator) {
@@ -40,6 +41,17 @@ export default function RootLayout({
 
     // Connect to notification socket
     connectSocket();
+
+    // Пасхалка: ретро-режим при нажатии Ctrl+Shift+R
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.ctrlKey && e.shiftKey && e.key === 'R') {
+        e.preventDefault();
+        setIsRetroMode(!isRetroMode);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [connectSocket]);
 
   return (
@@ -53,7 +65,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
       </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased ${isRetroMode ? 'windows95-mode' : ''}`}
         suppressHydrationWarning={true}
       >
         <ResourceHints />

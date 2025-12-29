@@ -64,17 +64,27 @@ export default function VoiceMessageVisualization({
 }: VoiceMessageVisualizationProps) {
   const [emotion, setEmotion] = useState('neutral');
   const [waveData, setWaveData] = useState<number[]>([]);
+  const [emotionalSpectrum, setEmotionalSpectrum] = useState<[number, number][]>([]);
 
   const analyzeVoiceEmotion = async (blob: Blob) => {
     try {
-      // In real implementation, convert blob to base64 and send to OpenAI
-      // For now, simulate with random emotion
+      // Анализ эмоций через AI-стек
+      const emotions = await fetch('/api/ai/analyze-voice', {
+        method: 'POST',
+        body: JSON.stringify({ audioBlob: blob })
+      });
+      const emotionData = await emotions.json();
+
+      setEmotion(emotionData.emotion);
+      setEmotionalSpectrum(emotionData.spectrum || []);
+      onEmotionDetected?.(emotionData.emotion);
+    } catch (error) {
+      console.error('Voice emotion analysis failed:', error);
+      // Fallback to simulation
       const emotions = ['excited', 'calm', 'angry', 'sad', 'neutral'];
       const detectedEmotion = emotions[Math.floor(Math.random() * emotions.length)];
       setEmotion(detectedEmotion);
       onEmotionDetected?.(detectedEmotion);
-    } catch (error) {
-      console.error('Voice emotion analysis failed:', error);
     }
   };
 
@@ -82,11 +92,11 @@ export default function VoiceMessageVisualization({
   const wavePoints = useMemo(() => {
     const points = [];
     const emotionColors = {
-      excited: '#FF00FF',
-      calm: '#00FFFF',
-      angry: '#FF6B6B',
-      sad: '#4A90E2',
-      neutral: '#FFFFFF'
+      excited: '#f72585', // energetic-pink
+      calm: '#4cc9f0', // calm-blue
+      angry: '#ff6b6b',
+      sad: '#4361ee',
+      neutral: '#e8d7ff' // midnight-text
     };
 
     for (let i = 0; i < 50; i++) {

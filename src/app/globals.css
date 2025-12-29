@@ -147,6 +147,22 @@
   --sunset-accent: 0.7 0.2 45; /* Sunset Yellow */
   --sunset-bg: 0.1 0.1 20; /* Deep Warm Background */
 
+  /* Новая палитра для "жидких интерфейсов" */
+  --deep-space: #0f0a1a;
+  --neon-lavender: #6c43ff;
+  --electric-cyan: #00f3ff;
+  --midnight-text: #e8d7ff;
+
+  /* Цвета для эмоций */
+  --calm-blue: #4cc9f0;
+  --energetic-pink: #f72585;
+  --focused-green: #72efdd;
+
+  /* Градиенты для кнопок */
+  --primary-gradient: linear-gradient(135deg, var(--neon-lavender), var(--electric-cyan));
+  --calm-gradient: linear-gradient(135deg, #4361ee, #3f37c9);
+  --energy-gradient: linear-gradient(135deg, #f72585, #b5179e);
+
   /* Fluid Typography Scale */
   --fluid-xs: clamp(0.75rem, 1.5vw, 0.875rem);
   --fluid-sm: clamp(0.875rem, 2vw, 1rem);
@@ -256,6 +272,22 @@
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
   50% { background-position: 100% 50%; }
+}
+
+/* Анимации для "жидких интерфейсов" */
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes message-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes emotion-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
 }
 
 @keyframes message-depth-hover {
@@ -852,4 +884,34 @@
     background: #C0C0C0;
     border: 2px inset #C0C0C0;
   }
+
+  /* Классы для "жидких интерфейсов" */
+  .glowing-bg {
+    background: var(--primary-gradient);
+    background-size: 200% 200%;
+    animation: gradient-shift 8s ease infinite;
+  }
+
+  .animate-shine {
+    animation: shine 2s infinite;
+  }
+
+  .animate-message-glow {
+    animation: message-glow 3s ease-in-out infinite;
+  }
+
+  .emotion-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    font-size: 12px;
+    animation: emotion-pulse 2s ease-in-out infinite;
+  }
+
+  .emotion-badge.calm { background: var(--calm-blue); }
+  .emotion-badge.energetic { background: var(--energetic-pink); }
+  .emotion-badge.focused { background: var(--focused-green); }
 }

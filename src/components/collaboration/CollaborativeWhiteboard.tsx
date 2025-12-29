@@ -19,7 +19,8 @@ import {
   Upload,
   Users,
   Palette,
-  Trash2
+  Trash2,
+  Eye
 } from 'lucide-react';
 
 interface Point {
@@ -64,6 +65,7 @@ export default function CollaborativeWhiteboard({
   const [isTextMode, setIsTextMode] = useState(false);
   const [textInput, setTextInput] = useState('');
   const [textPosition, setTextPosition] = useState<Point | null>(null);
+  const [isARMode, setIsARMode] = useState(false);
 
   // Colors palette
   const colors = [
@@ -422,6 +424,13 @@ export default function CollaborativeWhiteboard({
               </Button>
               <Button size="sm" variant="outline" onClick={handleExport}>
                 <Download className="w-4 h-4" />
+              </Button>
+              <Button
+                size="sm"
+                variant={isARMode ? 'default' : 'outline'}
+                onClick={() => setIsARMode(!isARMode)}
+              >
+                <Eye className="w-4 h-4" />
               </Button>
             </div>
           </div>
