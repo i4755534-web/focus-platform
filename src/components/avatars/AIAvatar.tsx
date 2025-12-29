@@ -4,6 +4,15 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Canvas } from '@react-three/fiber';
 import { OrbitControls, useGLTF } from '@react-three/drei';
+import '@lottiefiles/lottie-player';
+
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'lottie-player': any;
+    }
+  }
+}
 
 function AvatarModel({ url }: { url: string }) {
   const { scene } = useGLTF(url);
@@ -17,6 +26,10 @@ interface AIAvatarProps {
   animated?: boolean;
   status?: 'online' | 'offline' | 'typing' | 'away';
   mood?: 'happy' | 'serious' | 'creative' | 'energetic' | 'calm';
+  emotion?: 'thinking' | 'dancing' | 'academic' | 'neutral';
+  isTyping?: boolean;
+  hasHighGrade?: boolean;
+  isProfessor?: boolean;
 }
 
 interface AvatarData {
@@ -36,11 +49,18 @@ export default function AIAvatar({
   size = 'md',
   animated = true,
   status = 'offline',
-  mood = 'calm'
+  mood = 'calm',
+  emotion = 'neutral',
+  isTyping = false,
+  hasHighGrade = false,
+  isProfessor = false
 }: AIAvatarProps) {
   const [avatarData, setAvatarData] = useState<AvatarData | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  // Определяем текущую эмоцию
+  const currentEmotion = isTyping ? 'thinking' : hasHighGrade ? 'dancing' : isProfessor ? 'academic' : emotion;
 
   const sizeClasses = {
     sm: 'w-8 h-8',
@@ -62,6 +82,13 @@ export default function AIAvatar({
     creative: 'from-purple-500 via-pink-500 to-orange-400',
     energetic: 'from-red-500 via-orange-500 to-yellow-400',
     calm: 'from-green-400 via-blue-400 to-purple-500'
+  };
+
+  const emotionLotties = {
+    thinking: 'https://assets.lottiefiles.com/packages/lf20_4kmUDE.json', // Thinking animation
+    dancing: 'https://assets.lottiefiles.com/packages/lf20_4jyhQz.json', // Dancing animation
+    academic: 'https://assets.lottiefiles.com/packages/lf20_4jyhQz.json', // Academic hat or similar
+    neutral: null
   };
 
   // Генерация AI аватара
@@ -204,6 +231,20 @@ export default function AIAvatar({
         ) : (
           <div className="w-full h-full flex items-center justify-center text-white font-bold text-lg">
             {isGenerating ? '...' : username.charAt(0).toUpperCase()}
+          </div>
+        )}
+
+        {/* Lottie анимация для эмоций */}
+        {currentEmotion !== 'neutral' && emotionLotties[currentEmotion] && (
+          <div className="absolute inset-0 flex items-center justify-center">
+            <lottie-player
+              src={emotionLotties[currentEmotion]}
+              background="transparent"
+              speed="1"
+              style={{ width: '100%', height: '100%' }}
+              loop
+              autoplay
+            />
           </div>
         )}
 

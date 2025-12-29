@@ -138,6 +138,15 @@
   --nebula-warning: 0.8 0.8 45; /* Neon Yellow */
   --nebula-info: 0.7 0.8 210; /* Neon Blue */
 
+  /* 2025 Design Revolution Variables */
+  --mood-angle: 45deg;
+  --mood-color1: oklch(0.55 0.9 270); /* Neon Lavender */
+  --mood-color2: oklch(0.8 0.9 180); /* Cyan Neon */
+  --sunset-primary: 0.6 0.4 30; /* Warm Orange */
+  --sunset-secondary: 0.5 0.3 15; /* Deep Red */
+  --sunset-accent: 0.7 0.2 45; /* Sunset Yellow */
+  --sunset-bg: 0.1 0.1 20; /* Deep Warm Background */
+
   /* Fluid Typography Scale */
   --fluid-xs: clamp(0.75rem, 1.5vw, 0.875rem);
   --fluid-sm: clamp(0.875rem, 2vw, 1rem);
@@ -778,5 +787,69 @@
   @keyframes holo-shift {
     0%, 100% { background-position: 0% 50%; }
     50% { background-position: 100% 50%; }
+  }
+
+  /* 2025 Design Revolution Classes */
+  .mood-button {
+    background: conic-gradient(from var(--mood-angle), var(--mood-color1), var(--mood-color2));
+    transition: background 0.5s ease;
+    mix-blend-mode: luminosity;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 24px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 16px oklch(var(--shadow));
+  }
+
+  .mood-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 32px oklch(var(--shadow)), 0 0 16px var(--mood-color1);
+  }
+
+  /* Sunset Mode */
+  .sunset-mode {
+    --background: oklch(var(--sunset-bg));
+    --foreground: oklch(0.9 0.1 45);
+    --primary: oklch(var(--sunset-primary));
+    --secondary: oklch(var(--sunset-secondary));
+    --accent: oklch(var(--sunset-accent));
+    --muted: oklch(0.2 0.1 30);
+    --muted-foreground: oklch(0.8 0.2 45);
+  }
+
+  .sunset-mode .liquid-bg {
+    background: linear-gradient(135deg,
+      oklch(var(--sunset-primary) / 0.1),
+      oklch(var(--sunset-secondary) / 0.08),
+      oklch(var(--sunset-accent) / 0.05)
+    );
+  }
+
+  /* Secret Windows 95 Mode */
+  .windows95-mode {
+    --background: #008080;
+    --foreground: #000000;
+    --primary: #C0C0C0;
+    --secondary: #808080;
+    --accent: #FFFF00;
+    font-family: 'MS Sans Serif', sans-serif;
+  }
+
+  .windows95-mode * {
+    border-radius: 0 !important;
+    box-shadow: inset -1px -1px 0px #000000, inset 1px 1px 0px #DFDFDF, inset -2px -2px 0px #808080, inset 2px 2px 0px #FFFFFF !important;
+  }
+
+  .windows95-mode .liquid-button {
+    background: linear-gradient(135deg, #C0C0C0, #DFDFDF);
+    color: black;
+    border: 2px outset #C0C0C0;
+  }
+
+  .windows95-mode .message-depth {
+    background: #C0C0C0;
+    border: 2px inset #C0C0C0;
   }
 }
