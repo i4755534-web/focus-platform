@@ -142,7 +142,7 @@ const ChatClient = memo(function ChatClient({ chatId }: ChatClientProps) {
 
   return (
     <div className="flex flex-col h-full" style={{ background: theme.background }} data-testid="chat-container">
-      <ChatHeader name={chat.name} participants={chat.participants} typingUsers={typingUsers} />
+      <ChatHeader name={chat.name} participants={chat.participants} typingUsers={typingUsers} onSummarize={handleSummarize} />
 
       {chatPinned.length > 0 && (
         <div className="p-2 bg-yellow-100 border-b">

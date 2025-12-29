@@ -88,6 +88,23 @@ const MessageList = memo(function MessageList({ messages = [], chatId, onPinMess
     }
   }, [chatId, addFavorite]);
 
+  const handleAiReaction = useCallback(async (emoji: string, message: Message) => {
+    try {
+      const reaction = await fetch('/api/ai/reaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          emoji,
+          message,
+          context: 'student is reacting to this explanation'
+        })
+      });
+      // Возможно, обработать ответ
+    } catch (error) {
+      console.error('Ошибка AI реакции:', error);
+    }
+  }, []);
+
   const handleSwipeLeft = useCallback((messageId: string) => {
     // Archive chat
     console.log('Archive chat:', messageId);

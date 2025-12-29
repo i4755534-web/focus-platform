@@ -10,7 +10,7 @@ interface ChatHeaderProps {
   typingUsers?: string[];
 }
 
-export default function ChatHeader({ name, participants, typingUsers = [] }: ChatHeaderProps) {
+export default function ChatHeader({ name, participants, typingUsers = [], onSummarize }: ChatHeaderProps) {
   const router = useRouter();
 
   const handleExport = () => {

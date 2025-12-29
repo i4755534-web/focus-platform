@@ -1,4 +1,8 @@
 // Безопасный клиент для локальной модели Ollama
+const OLLAMA_URL = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:11434'
+  : 'http://ollama:11434'; // Для Docker-деплоя
+
 export async function* getOllamaResponse(prompt: string, context: {
   subject?: string;
   difficulty?: 'beginner' | 'intermediate' | 'advanced';
@@ -78,7 +82,7 @@ export async function* getOllamaResponse(prompt: string, context: {
 // Тестовая функция для проверки работы
 export const testOllamaConnection = async () => {
   try {
-    const response = await fetch('http://localhost:11434/api/tags');
+    const response = await fetch(`${OLLAMA_URL}/api/tags`);
     return response.ok;
   } catch {
     return false;

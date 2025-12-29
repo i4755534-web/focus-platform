@@ -118,7 +118,7 @@ export default function LocalAssistant() {
   }
 
   return (
-    <div className={`fixed bottom-4 ${isMobile ? 'left-2 right-2' : 'right-4'} ${isMobile ? 'w-auto' : 'w-[350px]'} h-[500px] glass-card border border-purple-500/30 rounded-3xl overflow-hidden shadow-2xl`}>
+    <div className={`fixed bottom-4 ${isMobile ? 'left-2 right-2 mx-2' : 'right-4'} ${isMobile ? 'w-auto' : 'w-[350px]'} max-w-full h-[500px] glass-card border border-purple-500/30 rounded-3xl overflow-hidden shadow-2xl`}>
       {/* Шапка с названием */}
       <div className="bg-gradient-to-r from-[#6c43ff] to-[#00f3ff] p-4 text-center relative overflow-hidden">
         <div className="absolute inset-0 animate-pulse opacity-20" style={{
