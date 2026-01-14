@@ -10,6 +10,7 @@ import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2 } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export default function IntegrationsPage() {
   const { integrations, loading, error, fetchIntegrations, connectIntegration, disconnectIntegration } = useIntegrations();
@@ -77,7 +78,16 @@ export default function IntegrationsPage() {
 
   return (
     <div>
-      <h2 className="text-2xl mb-4">Интеграции</h2>
+      <div className="flex items-center mb-4">
+        <motion.span
+          className="text-3xl mr-3"
+          layoutId="nav-icon-/integrations"
+          transition={{ duration: 0.3 }}
+        >
+          🔗
+        </motion.span>
+        <h2 className="text-2xl">Интеграции</h2>
+      </div>
       <p className="text-gray-600 mb-6">
         Подключайте внешние сервисы для расширения функциональности FOCUS
       </p>

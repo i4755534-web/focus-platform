@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
 
 interface Particle {
   id: number;
@@ -47,10 +47,19 @@ const generateFocusParticles = (): Particle[] => {
 };
 
 export default function ParticleBackground() {
-  const [particles] = useState<Particle[]>(() => generateFocusParticles());
+  const [particles, setParticles] = useState<Particle[]>([]);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
+  useLayoutEffect(() => {
+    if (typeof window !== 'undefined') {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      setParticles(generateFocusParticles());
+    }
+  }, []);
+
   useEffect(() => {
+    if (particles.length === 0) return;
+
     // Mouse move handler
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({ x: e.clientX, y: e.clientY });
@@ -61,7 +70,11 @@ export default function ParticleBackground() {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
-  }, []);
+  }, [particles.length]);
+
+  if (particles.length === 0) {
+    return null; // Don't render until particles are generated
+  }
 
   return (
     <div className="fixed inset-0 overflow-hidden pointer-events-none">

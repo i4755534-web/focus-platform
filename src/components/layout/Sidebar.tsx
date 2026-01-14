@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useAuth } from '@/hooks/useAuth';
 import { useFavorites } from '@/hooks/useFavorites';
+import { motion } from 'framer-motion';
 
 const groups = [
   {
@@ -45,6 +46,7 @@ export default function Sidebar({ mobile }: SidebarProps) {
   const { user } = useAuth();
   const { addFavorite, removeFavorite, isFavorite } = useFavorites();
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set(['FOCUS Community']));
+  const [hoveredItem, setHoveredItem] = useState<string | null>(null);
 
   const toggleGroup = (groupName: string) => {
     setExpandedGroups(prev => {
@@ -70,6 +72,24 @@ export default function Sidebar({ mobile }: SidebarProps) {
         content: `#${channelName} в ${groupName}`,
       });
     }
+  };
+
+  const getPreviewContent = (href: string) => {
+    const previews: Record<string, { title: string; description: string; icon: string }> = {
+      '/friends': { title: 'Друзья', description: 'Управляйте своими контактами', icon: '👥' },
+      '/search': { title: 'Поиск', description: 'Найдите пользователей и контент', icon: '🔍' },
+      '/web3': { title: 'Web3', description: 'Кошелек и NFT достижения', icon: '⛓️' },
+      '/calls': { title: 'Звонки', description: 'Видео и голосовые звонки', icon: '📞' },
+      '/vr': { title: 'VR Комнаты', description: 'Виртуальные комнаты для встреч', icon: '🎮' },
+      '/favorites': { title: 'Избранное', description: 'Ваши сохраненные элементы', icon: '⭐' },
+      '/achievements': { title: 'Достижения', description: 'Ваши награды и прогресс', icon: '🏆' },
+      '/analytics': { title: 'Аналитика', description: 'Статистика использования', icon: '📊' },
+      '/integrations': { title: 'Интеграции', description: 'Подключенные сервисы', icon: '🔗' },
+      '/profile': { title: 'Профиль', description: 'Управление аккаунтом', icon: '👤' },
+      '/settings': { title: 'Настройки', description: 'Настройки приложения', icon: '⚙️' },
+    };
+
+    return previews[href] || { title: 'Страница', description: 'Описание недоступно', icon: '📄' };
   };
 
   return (
@@ -115,13 +135,40 @@ export default function Sidebar({ mobile }: SidebarProps) {
             </div>
           ))}
         </div>
-        <ul>
+        <ul className="relative">
           {navigation.map((item) => (
-            <li key={item.name} className="mb-2">
-              <Link href={item.href} className="flex items-center p-2 rounded hover:bg-purple-800 text-purple-200 hover:text-purple-100 transition-colors">
-                <span className="mr-3 text-lg">{item.icon}</span>
+            <li key={item.name} className="mb-2 relative">
+              <Link
+                href={item.href}
+                className="flex items-center p-2 rounded hover:bg-purple-800 text-purple-200 hover:text-purple-100 transition-colors"
+                onMouseEnter={() => setHoveredItem(item.href)}
+                onMouseLeave={() => setHoveredItem(null)}
+              >
+                <motion.span
+                  className="mr-3 text-lg"
+                  layoutId={`nav-icon-${item.href}`}
+                  transition={{ duration: 0.3 }}
+                >
+                  {item.icon}
+                </motion.span>
                 {item.name}
               </Link>
+
+              {/* Hover Preview */}
+              {hoveredItem === item.href && !mobile && (
+                <motion.div
+                  initial={{ opacity: 0, x: 10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 10 }}
+                  className="absolute left-full top-0 ml-4 w-64 bg-purple-900 border border-purple-400 rounded-lg p-4 shadow-lg z-50"
+                >
+                  <div className="flex items-center mb-2">
+                    <span className="text-2xl mr-3">{getPreviewContent(item.href).icon}</span>
+                    <h4 className="text-purple-100 font-semibold">{getPreviewContent(item.href).title}</h4>
+                  </div>
+                  <p className="text-purple-300 text-sm">{getPreviewContent(item.href).description}</p>
+                </motion.div>
+              )}
             </li>
           ))}
         </ul>

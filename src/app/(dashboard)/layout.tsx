@@ -15,6 +15,9 @@ import PWAInstallPrompt from '@/components/pwa/PWAInstallPrompt';
 import { ErrorBoundary } from '@/components/error/ErrorBoundary';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import MoodBackground from '@/components/MoodBackground';
+import { PageTransitionProvider } from '@/components/transitions/PageTransitionProvider';
+import HolographicBackground from '@/components/HolographicBackground';
+import QuantumRealityEngine from '@/components/QuantumRealityEngine';
 
 export default function DashboardLayout({
   children,
@@ -39,6 +42,8 @@ export default function DashboardLayout({
 
   return (
     <MoodBackground>
+      <HolographicBackground />
+      <QuantumRealityEngine />
       {/* Skip Links for Accessibility */}
       <a
         href="#main-content"
@@ -71,7 +76,9 @@ export default function DashboardLayout({
           <Topbar onMenuClick={() => setSidebarOpen(true)} onLogoClick={handleLogoClick} />
           <main id="main-content" className="flex-1 p-4 overflow-auto pb-16 md:pb-4" role="main" aria-label="Основное содержимое">
             <ErrorBoundary>
-              {children}
+              <PageTransitionProvider>
+                {children}
+              </PageTransitionProvider>
             </ErrorBoundary>
           </main>
           <MobileNav />
